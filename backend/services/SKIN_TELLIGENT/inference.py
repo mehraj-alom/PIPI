@@ -3,6 +3,7 @@ import cv2
 from pathlib import Path
 from datetime import datetime
 import uuid
+import json
 import yaml
 from yaml import SafeLoader
 from backend.services.SKIN_TELLIGENT.core import Detector, ROIExtractor , Classifier , GradCAMPlusPlus , apply_heatmap_on_image
@@ -87,24 +88,37 @@ class InferencePipeline:
 
         return [data["names"][i] for i in sorted(data["names"].keys())]
 
-    def create_run_output_dirs(self):
-        """Create a unique output folder for each SKIN_TELLIGENT request."""
+    def create_run_output_dirs(self, output_root: Path | str | None = None):
+        """Create output directories for one run, optionally under a shared case folder."""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         run_id = f"{timestamp}_{uuid.uuid4().hex}"
 
-        run_dir = Path("output") / "SKIN_TELLIGENT" / run_id
+        if output_root is None:
+            run_dir = Path("output") / "SKIN_TELLIGENT" / run_id
+        else:
+            run_dir = Path(output_root)
+
+        images_dir = run_dir / "images"
+        reports_dir = run_dir / "reports"
         gradcam_dir = run_dir / "gradcam"
         detections_dir = run_dir / "detections"
+        detection_boxes_dir = run_dir / "detection_boxes"
 
         run_dir.mkdir(parents=True, exist_ok=True)
+        images_dir.mkdir(parents=True, exist_ok=True)
+        reports_dir.mkdir(parents=True, exist_ok=True)
         gradcam_dir.mkdir(parents=True, exist_ok=True)
         detections_dir.mkdir(parents=True, exist_ok=True)
+        detection_boxes_dir.mkdir(parents=True, exist_ok=True)
 
         return {
             "run_id": run_id,
             "run_dir": run_dir,
+            "images_dir": images_dir,
+            "reports_dir": reports_dir,
             "gradcam_dir": gradcam_dir,
             "detections_dir": detections_dir,
+            "detection_boxes_dir": detection_boxes_dir,
         }
 
     def save_image(self, path: Path, image, description: str):
@@ -113,6 +127,19 @@ class InferencePipeline:
         if not ok:
             logger.warning(f"Failed to save {description} at {path}")
         return str(path)
+
+    def save_classification_report(self, report_path: Path, classification_results):
+        """Persist classification output as a text report for traceability."""
+        try:
+            with report_path.open("w", encoding="utf-8") as f:
+                f.write("SKIN_TELLIGENT Classification Report\n")
+                f.write("=" * 40 + "\n\n")
+                f.write(json.dumps(classification_results, indent=2, ensure_ascii=False))
+                f.write("\n")
+            return str(report_path)
+        except Exception:
+            logger.exception("Failed to write classification report")
+            return ""
 
     def draw_detection_boxes(self, image, boxes, confidences, x_factor, y_factor):
         """Render detected boxes on a copy of the original image."""
@@ -148,21 +175,25 @@ class InferencePipeline:
     # FASTAPI IMAGE PIPELINE ===
     # ==========================
 
-    def run_image(self, image):
-        output_paths = self.create_run_output_dirs()
+    def run_image(self, image, output_root: Path | str | None = None):
+        output_paths = self.create_run_output_dirs(output_root=output_root)
         run_dir = output_paths["run_dir"]
+        images_dir = output_paths["images_dir"]
+        reports_dir = output_paths["reports_dir"]
         gradcam_dir = output_paths["gradcam_dir"]
         detections_dir = output_paths["detections_dir"]
+        detection_boxes_dir = output_paths["detection_boxes_dir"]
+        run_id = output_paths["run_id"]
 
         original_image_path = self.save_image(
-            run_dir / "original_image.jpg", image, "original image"
+            images_dir / f"original_image_{run_id}.jpg", image, "original image"
         )
 
         boxes, confidences, classes, x_factor, y_factor = self.detector.detect(image)
 
         boxed_image = self.draw_detection_boxes(image, boxes, confidences, x_factor, y_factor)
         boxed_image_path = self.save_image(
-            run_dir / "original_with_detection_boxes.jpg",
+            detection_boxes_dir / f"original_with_detection_boxes_{run_id}.jpg",
             boxed_image,
             "original image with detection boxes",
         )
@@ -172,8 +203,10 @@ class InferencePipeline:
             "run_dir": str(run_dir),
             "original_image": original_image_path,
             "detection_boxes_image": boxed_image_path,
+            "reports_dir": str(reports_dir),
             "gradcam_dir": str(gradcam_dir),
             "detections_dir": str(detections_dir),
+            "detection_boxes_dir": str(detection_boxes_dir),
         }
 
         if not boxes:
@@ -248,6 +281,12 @@ class InferencePipeline:
                 except Exception:
                     logger.exception("Full-image classification failed.")
 
+                report_path = self.save_classification_report(
+                    reports_dir / f"classification_report_{run_id}.txt",
+                    classification_results,
+                )
+                output_info["classification_report"] = report_path
+
                 return boxed_image, [], classification_results, output_info
 
         # -----------------------------
@@ -266,7 +305,7 @@ class InferencePipeline:
 
             logger.info(f"Classifier output for ROI {i}: {preds}")
 
-            roi_path = str(detections_dir / f"detection_{i}.jpg")
+            roi_path = str(detections_dir / f"detection_{run_id}_{i}.jpg")
             cv2.imwrite(roi_path, crop)
 
             preds["roi_image"] = roi_path
@@ -311,7 +350,7 @@ class InferencePipeline:
                     overlay = apply_heatmap_on_image(crop, heatmap)
                     gradcam_path = os.path.join(
                         str(gradcam_dir),
-                        f"gradcam_roi_{i}_top{rank}_class{class_idx}.jpg"
+                        f"gradcam_roi_{run_id}_{i}_top{rank}_class{class_idx}.jpg"
                     )
                     cv2.imwrite(gradcam_path, overlay)
 
@@ -333,5 +372,11 @@ class InferencePipeline:
                 logger.exception("Failed to generate Grad-CAM")
 
             classification_results.append(preds)
+
+        report_path = self.save_classification_report(
+            reports_dir / f"classification_report_{run_id}.txt",
+            classification_results,
+        )
+        output_info["classification_report"] = report_path
 
         return boxed_image, cropped_regions, classification_results, output_info

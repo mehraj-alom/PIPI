@@ -1,9 +1,10 @@
 import shutil
 import uuid
+import json
 from pathlib import Path
 from typing import Literal
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
 
@@ -17,6 +18,12 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 DOCLING_UPLOAD_DIR = Path("uploads/docling")
 DOCLING_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _safe_write_json(path: Path, payload) -> None:
+    """Write JSON artifacts safely even with non-serializable values."""
+    with path.open("w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False, default=str)
 
 
 
@@ -40,8 +47,10 @@ def router(file_path: Path, report_type: str):
 
 @document_router.post("/upload", description="Upload and process a medical document (ADE for prescriptions, Docling for lab reports)")
 async def upload_and_process(
+    request: Request,
     file: UploadFile = File(...),
     report_type: Literal["prescription", "lab_report"] = Form("lab_report"),
+    patient_id: str | None = Form(default=None),
 ):
     """
     Accepts: PDF, PNG, JPG
@@ -63,6 +72,12 @@ async def upload_and_process(
         )
 
     temp_path = UPLOAD_DIR / f"{uuid.uuid4()}{suffix}"
+    stored_original_path = ""
+    stored_markdown_path = ""
+    stored_fields_path = ""
+    stored_chunks_path = ""
+    stored_result_path = ""
+    case_context = None
 
     try:
         with temp_path.open("wb") as f:
@@ -71,7 +86,43 @@ async def upload_and_process(
         logger.info(f"[UPLOAD] Saved {file.filename} → {temp_path}")
         logger.info(f"[UPLOAD] Report type: {report_type}")
 
+        session_id = request.headers.get("x-session-id")
+        case_context = request.app.state.case_output_manager.get_or_create(
+            patient_id=patient_id,
+            session_id=session_id,
+        )
+
+        documents_dir = Path(case_context["documents_dir"])
+        originals_dir = documents_dir / "originals"
+        parsed_dir = documents_dir / "parsed"
+        originals_dir.mkdir(parents=True, exist_ok=True)
+        parsed_dir.mkdir(parents=True, exist_ok=True)
+
+        original_name = Path(file.filename).name
+        stem = Path(file.filename).stem
+        artifact_id = uuid.uuid4().hex
+
+        original_target = originals_dir / f"{artifact_id}_{original_name}"
+        shutil.copy2(temp_path, original_target)
+        stored_original_path = str(original_target)
+
         result = router(temp_path, report_type=report_type)
+
+        stored_markdown = parsed_dir / f"{artifact_id}_{stem}.md"
+        stored_markdown.write_text(result.get("markdown", ""), encoding="utf-8")
+        stored_markdown_path = str(stored_markdown)
+
+        stored_fields = parsed_dir / f"{artifact_id}_{stem}_medical_fields.json"
+        _safe_write_json(stored_fields, result.get("medical_fields", {}))
+        stored_fields_path = str(stored_fields)
+
+        stored_chunks = parsed_dir / f"{artifact_id}_{stem}_chunks.json"
+        _safe_write_json(stored_chunks, result.get("chunks", []))
+        stored_chunks_path = str(stored_chunks)
+
+        stored_result = parsed_dir / f"{artifact_id}_{stem}_result.json"
+        _safe_write_json(stored_result, result)
+        stored_result_path = str(stored_result)
 
         engine = "docling" if report_type == "lab_report" else "ade"
 
@@ -91,6 +142,20 @@ async def upload_and_process(
         "engine": engine,
         "report_type": report_type,
         "filename": file.filename,
+        "case": {
+            "case_id": case_context.get("case_id") if case_context else "",
+            "context_key": case_context.get("context_key") if case_context else "",
+            "case_dir": str(case_context.get("case_dir")) if case_context else "",
+            "documents_dir": str(case_context.get("documents_dir")) if case_context else "",
+            "skintelligent_dir": str(case_context.get("skintelligent_dir")) if case_context else "",
+        },
+        "stored_outputs": {
+            "original_document": stored_original_path,
+            "parsed_markdown": stored_markdown_path,
+            "medical_fields_json": stored_fields_path,
+            "chunks_json": stored_chunks_path,
+            "result_json": stored_result_path,
+        },
         "chunk_count": len(result.get("chunks", [])),
         "medical_fields": result.get("medical_fields", {}),
         "chunks": result.get("chunks", []),

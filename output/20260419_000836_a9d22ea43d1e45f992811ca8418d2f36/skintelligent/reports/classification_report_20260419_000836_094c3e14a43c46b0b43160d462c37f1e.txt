@@ -1,0 +1,51 @@
+SKIN_TELLIGENT Classification Report
+========================================
+
+[
+  {
+    "class_name": "Acne",
+    "confidence": 0.9174869656562805,
+    "class_idx": 0,
+    "top_3_predictions": [
+      {
+        "class_name": "Acne",
+        "confidence": 0.9174869656562805,
+        "class_idx": 0
+      },
+      {
+        "class_name": "Lupus_And_Other_Connective_Tissue_Diseases",
+        "confidence": 0.05665873736143112,
+        "class_idx": 14
+      },
+      {
+        "class_name": "Rosacea",
+        "confidence": 0.014925938099622726,
+        "class_idx": 22
+      }
+    ],
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Acne",
+        "confidence": 0.9174869656562805,
+        "class_idx": 0,
+        "gradcam": "output/20260419_000836_a9d22ea43d1e45f992811ca8418d2f36/skintelligent/gradcam/gradcam_full_image_top1_class0.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Lupus_And_Other_Connective_Tissue_Diseases",
+        "confidence": 0.05665873736143112,
+        "class_idx": 14,
+        "gradcam": "output/20260419_000836_a9d22ea43d1e45f992811ca8418d2f36/skintelligent/gradcam/gradcam_full_image_top2_class14.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Rosacea",
+        "confidence": 0.014925938099622726,
+        "class_idx": 22,
+        "gradcam": "output/20260419_000836_a9d22ea43d1e45f992811ca8418d2f36/skintelligent/gradcam/gradcam_full_image_top3_class22.jpg"
+      }
+    ],
+    "gradcam": "output/20260419_000836_a9d22ea43d1e45f992811ca8418d2f36/skintelligent/gradcam/gradcam_full_image_top1_class0.jpg"
+  }
+]

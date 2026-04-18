@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.services.SKIN_TELLIGENT.inference import InferencePipeline
+from backend.services.output_context import CaseOutputManager
 from logger import SKIN_TELLIGENT_logger as logger
 from api.routers import skintelligent_router , document_router
 
@@ -23,6 +24,7 @@ app.include_router(document_router.document_router)
 async def startup_event():
     """Initialize the vision pipeline on startup."""
     app.state.vision_pipeline = InferencePipeline()
+    app.state.case_output_manager = CaseOutputManager()
 
 @app.get("/health", tags=["Utility"])
 async def health_check() -> dict:

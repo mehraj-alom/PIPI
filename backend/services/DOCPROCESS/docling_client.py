@@ -24,7 +24,7 @@ def build_docling_llm():
 
 
 #DOCLING CLIiENT(LAB REPORT ONLY)
-# =========================================================
+# ============================
 
 class DoclingClient:
     def __init__(self):
@@ -37,16 +37,14 @@ class DoclingClient:
         Only handles lab reports (router ensures this)
         """
         doc_path = str(doc_path)
-
-        # Convert image → scanned PDF
         if doc_path.lower().endswith((".jpg", ".jpeg", ".png")):
             doc_path = scan_document(doc_path)
 
-        # Convert document → markdown
+    
         result = self.converter.convert(doc_path)
         markdown = result.document.export_to_markdown()
 
-        # Extract structured data (lab report only)
+
         medical_fields = self.extract_medical_fields(markdown)
 
         return {
@@ -128,7 +126,13 @@ class DoclingClient:
 
 
         try:
-            text = response.content.strip()
+            content = response.content
+            if isinstance(content, list):
+                text = "".join(part if isinstance(part, str) else str(part) for part in content)
+            else:
+                text = content
+
+            text = text.strip()
             text = text.replace("```json", "").replace("```", "").strip()
             return json.loads(text)
 

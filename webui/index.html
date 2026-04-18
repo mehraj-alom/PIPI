@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIPI Upload Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="page-header">
+        <p class="eyebrow">PIPI</p>
+        <h1>Unified Case Upload UI</h1>
+        <p class="subtitle">
+          Upload skin images and documents under one shared case context.
+        </p>
+      </header>
+
+      <section class="panel context-panel">
+        <h2>Case Context</h2>
+        <div class="grid two-col">
+          <label>
+            API Base URL
+            <input id="apiBase" type="text" value="http://127.0.0.1:8000" />
+          </label>
+          <label>
+            Patient ID
+            <input id="patientId" type="text" placeholder="e.g. patient-001" />
+          </label>
+          <label>
+            Session ID Header (x-session-id)
+            <input id="sessionId" type="text" placeholder="e.g. consult-2026-04-19" />
+          </label>
+        </div>
+      </section>
+
+      <section class="grid two-col">
+        <article class="panel">
+          <h2>Skin Intelligent</h2>
+          <p class="muted">POST /Skin/SKIN_TELLIGENT</p>
+          <form id="skinForm" class="stack">
+            <label>
+              Skin Image
+              <input id="skinFile" type="file" accept="image/*" required />
+            </label>
+            <button type="submit">Upload Skin Image</button>
+          </form>
+          <div id="skinStatus" class="status"></div>
+          <pre id="skinOutput" class="output"></pre>
+        </article>
+
+        <article class="panel">
+          <h2>Document Upload</h2>
+          <p class="muted">POST /ade/upload</p>
+          <form id="docForm" class="stack">
+            <label>
+              Report Type
+              <select id="reportType">
+                <option value="lab_report">lab_report</option>
+                <option value="prescription">prescription</option>
+              </select>
+            </label>
+            <label>
+              Document File
+              <input id="docFile" type="file" accept=".pdf,.png,.jpg,.jpeg" required />
+            </label>
+            <button type="submit">Upload Document</button>
+          </form>
+          <div id="docStatus" class="status"></div>
+          <pre id="docOutput" class="output"></pre>
+        </article>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

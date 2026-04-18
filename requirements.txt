@@ -1,0 +1,35 @@
+#Core framework
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+python-multipart==0.0.22       # multipart/form-data file uploads
+
+
+# Core libraries
+numpy==1.26.4
+pillow==10.2.0
+opencv-python-headless==4.9.0.80
+fpdf==1.7.2
+
+# PyTorch (cpu only)
+torch==2.5.1
+torchvision==0.20.1
+torchaudio==2.5.1
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+#  Lab/Prescription 
+paddlepaddle
+paddleocr
+# opencv-python
+# pillow
+pymupdf
+docling
+chromadb
+landingai-ade
+# python-dotenv 
+
+
+#HTTP client (async)
+httpx==0.28.1
+
+#report gen 
+fpdf2 

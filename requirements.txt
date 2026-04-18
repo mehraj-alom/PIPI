@@ -10,6 +10,13 @@ pillow==10.2.0
 opencv-python-headless==4.9.0.80
 fpdf==1.7.2
 
+
+# LangGraph / LangChain
+langgraph
+langchain-openai
+langchain-core
+
+
 # PyTorch (cpu only)
 torch==2.5.1
 torchvision==0.20.1

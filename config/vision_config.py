@@ -12,7 +12,7 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class Paths:
-    detector_model: Path = Path("artifacts/detector_model.onnx")
+    detector_model: Path | str = Path("artifacts/detector_model.onnx")
     data_yaml: Path | str = Path("backend/services/SKIN_TELLIGENT/data.yaml") 
     classifier_model: Path = Path("artifacts/best_skin_model.pth")
     classifier_labels: Path = Path("backend/services/SKIN_TELLIGENT/classifier_labels.yaml")

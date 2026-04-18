@@ -25,7 +25,7 @@ from config.vision_config import Paths
 
 class Detector:
 
-    def __init__(self, model_path: Path, yaml_path: str, config: DetectorConfig ):
+    def __init__(self, model_path: Path | str, yaml_path: Path | str, config: DetectorConfig ):
         """
         Initialize detector
 
@@ -40,7 +40,7 @@ class Detector:
         self.model = self.load_model(model_path)
 
 
-    def load_labels(self, labels_file_path: str):
+    def load_labels(self, labels_file_path: Path | str):
         """
         Load class labels from YAML file
 
@@ -52,6 +52,8 @@ class Detector:
         """
 
         try:
+            labels_file_path = str(labels_file_path)
+
             with open(labels_file_path, "r") as f:
                 data_yaml = yaml.load(f, Loader=SafeLoader)
 
@@ -66,7 +68,7 @@ class Detector:
             raise e
     
 
-    def load_model(self, file_path: str):
+    def load_model(self, file_path: Path | str):
         """
         Load detector model from ONNX file
 

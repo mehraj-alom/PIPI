@@ -28,8 +28,16 @@ from config.voice_agent_schemas import (
     RescheduleAppointmentReq,
     SendUploadLinkReq
     )
+from config.db_config import settings
 
 router = APIRouter(prefix="/tools/VoiceAgent", tags=["Voice Agent Tools"])
+
+
+@router.get("/config", description="Expose non-sensitive voice agent runtime config for the web UI.")
+def get_voice_agent_config():
+    return {
+        "agent_id": settings.ELEVENLABS_AGENT_ID or ""
+    }
 
 def get_db():
     db = SessionLocal()
@@ -161,7 +169,10 @@ def reschedule_appointment_endpoint(req: RescheduleAppointmentReq, db = Depends(
 
 
 
-@router.post("/sendUploadLink", description="Send an upload link to the patient for document submission.")
+# NOTE: Upload is now handled as a client-side tool (requestUpload)
+# in the webui. The upload modal opens directly in the phone widget and
+# calls /Skin/SKIN_TELLIGENT or /ade/upload. This endpoint is kept as
+# a fallback for non-UI integrations.
+@router.post("/sendUploadLink", description="[Legacy] Upload is now handled in-UI via requestUpload client tool.")
 def send_upload_link(req: SendUploadLinkReq):
-    print(f"Dispatched SMS to {req.patient_phone} for upload type: {req.upload_type}")
-    return {"success": True, "message": "Upload link dispatched to patient securely."}
+    return {"success": True, "message": "Upload handled via client UI.", "upload_type": req.upload_type}

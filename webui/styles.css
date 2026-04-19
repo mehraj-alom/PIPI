@@ -174,3 +174,36 @@ button:disabled {
   font-family: "SFMono-Regular", Menlo, Consolas, monospace;
   font-size: 0.82rem;
 }
+
+/* ── Phone Panel Close Button ─────────────────────────────── */
+.phone-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  transition: background 0.2s ease, transform 0.2s ease;
+  padding: 0;
+}
+
+.phone-close-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: scale(1.1);
+}
+
+.phone-close-btn svg {
+  stroke: rgba(255, 255, 255, 0.5);
+}
+
+.phone-close-btn:hover svg {
+  stroke: rgba(255, 255, 255, 0.9);
+}
+

@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     DEEPGRAM_API_KEY: str | None = None
     ELEVENLABS_API_KEY: str | None = None
     ELEVENLABS_VOICE_ID: str | None = None
+    ELEVENLABS_AGENT_ID: str | None = None
 
     log_level: str = "INFO"
     allowed_origins: list[str] = ["*"]

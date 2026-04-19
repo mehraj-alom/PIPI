@@ -15,22 +15,61 @@
     <link rel="stylesheet" href="./voice-agent.css" />
   </head>
   <body>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <p class="topbar__brand">PIPI Care Navigator</p>
+        <nav class="topbar__nav" aria-label="Primary">
+          <a href="#why">Why</a>
+          <a href="#uploads">Uploads</a>
+          <a href="#how">How to Use</a>
+        </nav>
+      </div>
+    </header>
+
     <main class="page">
-      <header class="page-header">
-        <p class="eyebrow">PIPI</p>
-        <h1>Unified Case Upload UI</h1>
-        <p class="subtitle">
-          Upload skin images and documents under one shared case context.
+      <section class="hero">
+        <div class="hero__content">
+          <p class="eyebrow">Patient-first assistive intelligence</p>
+          <h1>One simple place to submit skin photos and medical documents</h1>
+          <p class="subtitle">
+            PIPI helps patients share clinical material safely, while keeping advanced analysis details hidden until explicitly requested.
+          </p>
+          <div class="hero__chips">
+            <span>Bounding-box preview</span>
+            <span>On-demand Grad-CAM</span>
+            <span>Voice-assisted scheduling</span>
+          </div>
+        </div>
+        <div class="hero__visual" aria-hidden="true">
+          <img src="https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Healthcare consultation stock visual" loading="lazy" />
+        </div>
+      </section>
+
+      <section id="why" class="panel info-panel">
+        <h2>Why this system</h2>
+        <p>
+          Patients usually need a clean upload journey, not raw technical output. This interface focuses on clarity first:
+          submit quickly, see confirmation immediately, and reveal deeper analysis only when needed.
         </p>
-      </header>
+        <div class="info-grid">
+          <article>
+            <h3>What it does</h3>
+            <p>Runs skin image detection with explainability, parses medical documents, and supports voice-agent appointment workflows.</p>
+          </article>
+          <article>
+            <h3>How results appear</h3>
+            <p>By default, patients only see a submission summary and the detected region image. Sensitive labels stay hidden behind See Result.</p>
+          </article>
+          <article>
+            <h3>When to trust outputs</h3>
+            <p>All outputs are educational support. Lower confidence or unclear findings should always be validated by a licensed clinician.</p>
+          </article>
+        </div>
+      </section>
 
       <section class="panel context-panel">
         <h2>Case Context</h2>
         <div class="grid two-col">
-          <label>
-            API Base URL
-            <input id="apiBase" type="text" value="http://127.0.0.1:8000" />
-          </label>
           <label>
             Patient ID
             <input id="patientId" type="text" placeholder="e.g. patient-001" />
@@ -42,10 +81,11 @@
         </div>
       </section>
 
-      <section class="grid two-col">
+      <section id="uploads" class="grid two-col uploads-grid">
         <article class="panel">
           <h2>Skin Intelligent</h2>
-          <p class="muted">POST /Skin/SKIN_TELLIGENT</p>
+          <p class="muted">Submit a skin image for detection + explainability</p>
+          <p class="hint-text">Default view shows detected region only. Tap See Result for predicted class and Grad-CAM.</p>
           <form id="skinForm" class="stack">
             <label>
               Skin Image
@@ -54,12 +94,13 @@
             <button type="submit">Upload Skin Image</button>
           </form>
           <div id="skinStatus" class="status"></div>
-          <pre id="skinOutput" class="output"></pre>
+          <div id="skinOutput" class="output"></div>
         </article>
 
         <article class="panel">
           <h2>Document Upload</h2>
-          <p class="muted">POST /ade/upload</p>
+          <p class="muted">Upload lab reports or prescriptions for structured extraction</p>
+          <p class="hint-text">Default view shows submission summary. Tap See Result for extracted text and fields.</p>
           <form id="docForm" class="stack">
             <label>
               Report Type
@@ -75,10 +116,27 @@
             <button type="submit">Upload Document</button>
           </form>
           <div id="docStatus" class="status"></div>
-          <pre id="docOutput" class="output"></pre>
+          <div id="docOutput" class="output"></div>
         </article>
       </section>
+
+      <section id="how" class="panel how-panel">
+        <h2>How to use</h2>
+        <ol>
+          <li>Enter patient and session details to keep all files grouped under one case.</li>
+          <li>Upload either a skin image or a document from the cards above.</li>
+          <li>Review the default submission card, then tap See Result only when detailed output is needed.</li>
+          <li>Use the call button to open the voice assistant for patient lookup and appointment actions.</li>
+        </ol>
+      </section>
     </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p>PIPI is an educational clinical support interface and does not replace professional medical judgment.</p>
+        <p>Use this system to organize submissions, surface explainability, and accelerate care coordination.</p>
+      </div>
+    </footer>
 
     <!-- ═══════════════════════════════════════════════════════
          VOICE AGENT — Phone Call Widget
@@ -158,6 +216,8 @@
         <div id="upload-modal" class="upload-modal hidden"></div>
       </div>
     </div>
+
+    <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
 
     <script src="./app.js"></script>
     <script src="./voice-agent.js"></script>

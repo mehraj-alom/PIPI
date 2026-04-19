@@ -70,6 +70,78 @@ function timeStr() {
   return new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
 
+function notifyToast(title, message, kind = 'success') {
+  if (typeof window.pipiNotify === 'function') {
+    window.pipiNotify(title, message, kind);
+  }
+}
+
+function titleCaseEndpoint(endpoint) {
+  return String(endpoint)
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/([_-])/g, ' ')
+    .trim();
+}
+
+function notifyToolOutcome(endpoint, data) {
+  const errorMessage = data && typeof data === 'object' ? data.error : '';
+  if (errorMessage) {
+    notifyToast(titleCaseEndpoint(endpoint), errorMessage, 'error');
+    return;
+  }
+
+  switch (endpoint) {
+    case 'getPatientDetails':
+      notifyToast('Patient found', data?.name ? `${data.name} is available in the record.` : 'Patient record loaded.', 'success');
+      break;
+    case 'registerNewPatient':
+      notifyToast('Patient registered', data?.patient_id ? `Patient ID ${data.patient_id} saved successfully.` : 'Patient details saved successfully.', 'success');
+      break;
+    case 'searchDoctors':
+      notifyToast('Doctors found', `${Array.isArray(data?.doctors) ? data.doctors.length : 0} doctor(s) matched your search.`, 'success');
+      break;
+    case 'checkDoctorAvailability':
+      notifyToast('Availability checked', Array.isArray(data?.available_slots) && data.available_slots.length > 0 ? `${data.available_slots.length} slot(s) available.` : 'No slots matched the requested time.', Array.isArray(data?.available_slots) && data.available_slots.length > 0 ? 'success' : 'warning');
+      break;
+    case 'bookAppointment':
+      notifyToast('Doctor booked', data?.appointment_id ? `Appointment ${data.appointment_id} has been scheduled.` : 'Appointment scheduled successfully.', 'success');
+      break;
+    case 'cancelAppointment':
+      notifyToast('Appointment cancelled', data?.appointment_id ? `Appointment ${data.appointment_id} was cancelled.` : 'Appointment cancelled successfully.', 'success');
+      break;
+    case 'getPatientAppointments':
+      notifyToast('Appointments loaded', `${Array.isArray(data?.appointments) ? data.appointments.length : 0} appointment(s) retrieved.`, 'success');
+      break;
+    case 'rescheduleAppointment':
+      notifyToast('Appointment rescheduled', data?.appointment_id ? `Appointment ${data.appointment_id} moved to ${data.new_date || 'the new date'}.` : 'Appointment rescheduled successfully.', 'success');
+      break;
+    default:
+      notifyToast(titleCaseEndpoint(endpoint), 'Request completed successfully.', 'success');
+      break;
+  }
+}
+
+function syncVoiceBackdrop() {
+  const widget = $('phone-widget');
+  const body = document.body;
+  if (!widget || !body) return;
+
+  const isExpanded = widget.getAttribute('data-state') === 'expanded';
+  const uploadModalVisible = $('upload-modal') && !$('upload-modal').classList.contains('hidden');
+  body.classList.toggle('voice-agent-backdrop-active', isExpanded || uploadModalVisible);
+}
+
+function normalizeUploadType(uploadType) {
+  const raw = String(uploadType || '').trim().toLowerCase();
+  if (!raw) return 'lab_report';
+
+  if (raw === 'skin_image' || raw.includes('skin')) return 'skin_image';
+  if (raw === 'prescription' || raw.includes('prescription')) return 'prescription';
+  if (raw === 'lab_report' || raw.includes('lab') || raw.includes('report') || raw.includes('document')) return 'lab_report';
+
+  return 'lab_report';
+}
+
 // ================================================================
 //  1. SESSION LIFECYCLE
 // ================================================================
@@ -155,10 +227,12 @@ function buildClientTools() {
       });
       const data = await res.json();
       logTool(icon, endpoint, data, 'done');
+      notifyToolOutcome(endpoint, data);
       return JSON.stringify(data);
     } catch (err) {
       const errObj = { error: err.message };
       logTool(icon, endpoint, errObj, 'error');
+      notifyToast(titleCaseEndpoint(endpoint), err.message || 'Request failed', 'error');
       return JSON.stringify(errObj);
     }
   };
@@ -183,7 +257,7 @@ function buildClientTools() {
 // ================================================================
 
 async function handleUploadRequest(params) {
-  const { upload_type } = params; // "skin_image" | "lab_report" | "prescription"
+  const upload_type = normalizeUploadType(params?.upload_type); // "skin_image" | "lab_report" | "prescription"
   const API = getApiBase();
   const patientId = $('patientId')?.value?.trim() || '';
   const sessionId = $('sessionId')?.value?.trim() || '';
@@ -232,6 +306,7 @@ async function handleUploadRequest(params) {
     `;
 
     modal.classList.remove('hidden');
+    syncVoiceBackdrop();
 
     // ── Wire events ──
     const fileInput = $('upload-file');
@@ -239,6 +314,7 @@ async function handleUploadRequest(params) {
 
     cancelBtn.onclick = () => {
       modal.classList.add('hidden');
+      syncVoiceBackdrop();
       resolve(JSON.stringify({ cancelled: true, message: 'User cancelled the upload.' }));
     };
 
@@ -290,7 +366,10 @@ async function handleUploadRequest(params) {
         progressText.classList.add('success');
 
         // Auto-close
-        setTimeout(() => { modal.classList.add('hidden'); }, 1500);
+        setTimeout(() => {
+          modal.classList.add('hidden');
+          syncVoiceBackdrop();
+        }, 1500);
 
         resolve(JSON.stringify(data));
       } catch (err) {
@@ -298,7 +377,10 @@ async function handleUploadRequest(params) {
         progressText.textContent = '✗ Upload failed — ' + (err.message || 'Unknown error');
         progressText.classList.add('error');
 
-        setTimeout(() => { modal.classList.add('hidden'); }, 2500);
+        setTimeout(() => {
+          modal.classList.add('hidden');
+          syncVoiceBackdrop();
+        }, 2500);
 
         resolve(JSON.stringify({ error: err.message || 'Upload failed' }));
       }
@@ -559,6 +641,8 @@ function togglePanel() {
     panel.classList.remove('hidden');
     widget.setAttribute('data-state', 'expanded');
   }
+
+  syncVoiceBackdrop();
 }
 
 // ================================================================
@@ -635,6 +719,8 @@ function init() {
       console.warn('[VoiceAgent] Missing ELEVENLABS_AGENT_ID. Set it in .env and restart backend.');
     }
   });
+
+  syncVoiceBackdrop();
 }
 
 // Run when DOM is ready

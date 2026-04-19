@@ -6,6 +6,7 @@ Provides:
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from backend.services.SKIN_TELLIGENT.inference import InferencePipeline
 from backend.services.output_context import CaseOutputManager
@@ -18,6 +19,8 @@ app = FastAPI(
                 "interactions and enhance care delivery through natural language processing and intelligent automation.",
     version="v0.0.1",
 )
+
+app.mount("/output", StaticFiles(directory="output"), name="output")
 
 app.add_middleware(
     CORSMiddleware,

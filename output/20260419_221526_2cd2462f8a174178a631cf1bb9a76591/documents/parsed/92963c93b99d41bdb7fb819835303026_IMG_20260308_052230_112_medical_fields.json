@@ -1,0 +1,34 @@
+{
+  "patient_name": "MA Japadar",
+  "date_of_birth": null,
+  "visit_date": "10.12.2025",
+  "diagnosis": [
+    "Presbyopia"
+  ],
+  "medications": [
+    "Lubrisa Ultra eye drops: 1 drop, 3 times a day",
+    "Cap. Mennil -G: 1 capsule, 3 times a day"
+  ],
+  "lab_values": [
+    {
+      "test": "V_A",
+      "value": "6/18"
+    },
+    {
+      "test": "CPH",
+      "value": "6/9"
+    },
+    {
+      "test": "Regn",
+      "value": "+1.00 dsph 2.25 dsa."
+    },
+    {
+      "test": "Add",
+      "value": "+ 2.25 N4"
+    }
+  ],
+  "doctor_name": "Dr. Lalhuthangi Hmar (Mami)",
+  "referred_specialist": null,
+  "follow_up_date": null,
+  "summary": "Patient MA Japadar (56/M) visited Dr. Lalhuthangi Hmar on 10.12.2025. Diagnosis is Presbyopia. Treatment includes Lubrisa Ultra eye drops and Cap. Memiif -G."
+}

@@ -1,0 +1,36 @@
+{
+  "patient_name": "Yash M. Patel",
+  "age": 21,
+  "gender": "Male",
+  "date_of_birth": null,
+  "visit_date": "2022-12-02",
+  "report_type": "lab_report",
+  "hospital_or_clinic": "SMART PATHOLOGY LAB",
+  "doctor_name": "Dr. Hiren Shah",
+  "diagnosis": [
+    "Tubular adenoma",
+    "Sessile serrated adenoma with low-grade dysplasia"
+  ],
+  "symptoms": [
+    "Nausea",
+    "Pain"
+  ],
+  "medical_history": [],
+  "allergies": [],
+  "medications": [],
+  "lab_tests": [],
+  "vital_signs": {
+    "blood_pressure": null,
+    "heart_rate": null,
+    "temperature": null,
+    "respiratory_rate": null,
+    "oxygen_saturation": null
+  },
+  "procedures": [
+    "Cecal polyp snare",
+    "Sigmoid polyp snare at 30 cm",
+    "Sigmoid polyp snare at 25 cm"
+  ],
+  "summary": "21-year-old male presented with nausea and pain; histopathology shows tubular adenoma of cecal polyp and sessile serrated adenoma with low-grade dysplasia of sigmoid polyps.",
+  "confidence": 0.8
+}

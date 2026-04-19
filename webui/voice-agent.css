@@ -31,6 +31,21 @@
   font-family: 'DM Sans', 'Inter', 'Segoe UI', sans-serif;
 }
 
+body.voice-agent-backdrop-active .page {
+  filter: blur(6px) saturate(0.92);
+  transform: scale(0.995);
+  transition: filter 0.25s ease, transform 0.25s ease;
+}
+
+body.voice-agent-backdrop-active .page > * {
+  pointer-events: none;
+}
+
+body.voice-agent-backdrop-active .phone-widget {
+  filter: none;
+  pointer-events: auto;
+}
+
 /* ── FAB (Floating Action Button) ────────────────────────── */
 .phone-fab {
   width: 64px;

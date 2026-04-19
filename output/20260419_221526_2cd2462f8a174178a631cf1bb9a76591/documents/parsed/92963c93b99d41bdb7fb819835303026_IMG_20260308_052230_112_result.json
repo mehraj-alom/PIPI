@@ -1,0 +1,263 @@
+{
+  "markdown": "<a id='14082c57-8fe1-4352-a5fc-bfa091cfc2b9'></a>\n\nDr. Lalhuthangi Hmar (Mami)\nM.S. Ophthalmology\nEye Specialist\nRegd. No. : MSMC/22/2015\n\n<a id='5fc28db8-9343-40fb-b705-35e11ad0f205'></a>\n\nClinic : - Andrew's Opticals & Pharmacy\nZarkawt, Near Traffic point\nPhone No. 9612314984 (C)\n6009705259\n\n<a id='9c13debc-e4ec-4c43-a9fd-219ef9ece94c'></a>\n\nRef. No. ... 3\nMA Japadar 56/M\nZarkawt\n\n<a id='5be03ca7-9049-44c5-8853-d9c9c353e1a5'></a>\n\nDate : 10.12.25\n\nB|E\n\nPlano Add+2-00\n\n<a id='c00c2dfc-f0ff-46f0-981b-6bd2f53e00e4'></a>\n\nTo- F.B. Sensation BLE-C\nPoor.\n\n<a id='2fb2847e-e221-4547-bb48-59b5e1c425d2'></a>\n\nV_A < 6/18\n       6/18\n\nCPH < 6/9\n       6/9\n\n<a id='e61ee7ad-129b-4f9c-856f-bf33235b8b64'></a>\n\n9E - Ant seg - hum.\nFundus - we.\n\n<a id='86834bfd-120c-4a2e-bb73-b0056a3e3b9b'></a>\n\n<::attestation: Signature\n[Readable Text: +1.25]\n[Signature: illegible]\nHandwritten in blue ink, centered, with a vertical line to the right::>\n\n<a id='a05dd886-e501-4be5-94b4-9dff45728ea7'></a>\n\nDi- Ref. Ense à Presbyopia\n\nR (1) Lubrisa Ultra eye drops.\n\nfor 1 vition N.3 xulla 3.\n\n1 --- 1 --- 1\n7:00 am --- 3 pm --- 9 pm\n(2) cap. Memiif -G\n\n<a id='8fba6d7e-4349-49aa-ab12-30086d4abe95'></a>\n\nRegn <\n+1.00 dsph\n\n2.25 dsa.\n\n<a id='74984ad2-4a39-4d0d-b1aa-fd066c6d5832'></a>\n\nAdd:- + 2.25 N4\n\n<a id='e9c47cf7-8578-4cde-9807-b97217b2babf'></a>\n\n7:00 AM 3 PM 9 PM\n\n2) Cap. Mennil -G\n\nMun / inlin V.Ixtila 3.\n\n-0-\n\n<a id='2a7c80c7-f08a-4bf3-81f7-cbf0dd83a578'></a>\n\nZuk Leh Hmuam – Nun Titawilu I Do Ilang Ang u.\n\n<a id='9e6e4d9f-b908-4df3-a58c-1b202ae77791'></a>\n\n<::attestation: Signature\nStatus indicators - signed\nSignature: illegible\nReadable Text: 18/12/23\nA blue ink handwritten signature with a date below it, centered on a light background.::>",
+  "chunks": [
+    {
+      "chunk_id": "14082c57-8fe1-4352-a5fc-bfa091cfc2b9",
+      "chunk_type": "text",
+      "text": "<a id='14082c57-8fe1-4352-a5fc-bfa091cfc2b9'></a>\n\nDr. Lalhuthangi Hmar (Mami)\nM.S. Ophthalmology\nEye Specialist\nRegd. No. : MSMC/22/2015",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.06075514853000641,
+            "bottom": 0.17459093034267426,
+            "left": 0.03352545201778412,
+            "right": 0.37543946504592896
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "5fc28db8-9343-40fb-b705-35e11ad0f205",
+      "chunk_type": "text",
+      "text": "<a id='5fc28db8-9343-40fb-b705-35e11ad0f205'></a>\n\nClinic : - Andrew's Opticals & Pharmacy\nZarkawt, Near Traffic point\nPhone No. 9612314984 (C)\n6009705259",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.08347846567630768,
+            "bottom": 0.18300320208072662,
+            "left": 0.5269553661346436,
+            "right": 0.9346276521682739
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "9c13debc-e4ec-4c43-a9fd-219ef9ece94c",
+      "chunk_type": "text",
+      "text": "<a id='9c13debc-e4ec-4c43-a9fd-219ef9ece94c'></a>\n\nRef. No. ... 3\nMA Japadar 56/M\nZarkawt",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.18087075650691986,
+            "bottom": 0.26802757382392883,
+            "left": 0.04617178440093994,
+            "right": 0.5726494789123535
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "5be03ca7-9049-44c5-8853-d9c9c353e1a5",
+      "chunk_type": "text",
+      "text": "<a id='5be03ca7-9049-44c5-8853-d9c9c353e1a5'></a>\n\nDate : 10.12.25\n\nB|E\n\nPlano Add+2-00",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.20991864800453186,
+            "bottom": 0.3137744963169098,
+            "left": 0.6762638092041016,
+            "right": 0.9932408332824707
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "c00c2dfc-f0ff-46f0-981b-6bd2f53e00e4",
+      "chunk_type": "text",
+      "text": "<a id='c00c2dfc-f0ff-46f0-981b-6bd2f53e00e4'></a>\n\nTo- F.B. Sensation BLE-C\nPoor.",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.3499361574649811,
+            "bottom": 0.4427678883075714,
+            "left": 0.03300294280052185,
+            "right": 0.5154882669448853
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "2fb2847e-e221-4547-bb48-59b5e1c425d2",
+      "chunk_type": "text",
+      "text": "<a id='2fb2847e-e221-4547-bb48-59b5e1c425d2'></a>\n\nV_A < 6/18\n       6/18\n\nCPH < 6/9\n       6/9",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.36561381816864014,
+            "bottom": 0.4719557762145996,
+            "left": 0.7360642552375793,
+            "right": 0.9967842698097229
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "e61ee7ad-129b-4f9c-856f-bf33235b8b64",
+      "chunk_type": "text",
+      "text": "<a id='e61ee7ad-129b-4f9c-856f-bf33235b8b64'></a>\n\n9E - Ant seg - hum.\nFundus - we.",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.4885038137435913,
+            "bottom": 0.605039119720459,
+            "left": 0.024390339851379395,
+            "right": 0.3770265281200409
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "86834bfd-120c-4a2e-bb73-b0056a3e3b9b",
+      "chunk_type": "attestation",
+      "text": "<a id='86834bfd-120c-4a2e-bb73-b0056a3e3b9b'></a>\n\n<::attestation: Signature\n[Readable Text: +1.25]\n[Signature: illegible]\nHandwritten in blue ink, centered, with a vertical line to the right::>",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.6119575500488281,
+            "bottom": 0.6674281358718872,
+            "left": 0.10261554270982742,
+            "right": 0.2883860766887665
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "a05dd886-e501-4be5-94b4-9dff45728ea7",
+      "chunk_type": "text",
+      "text": "<a id='a05dd886-e501-4be5-94b4-9dff45728ea7'></a>\n\nDi- Ref. Ense à Presbyopia\n\nR (1) Lubrisa Ultra eye drops.\n\nfor 1 vition N.3 xulla 3.\n\n1 --- 1 --- 1\n7:00 am --- 3 pm --- 9 pm\n(2) cap. Memiif -G",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.5130272507667542,
+            "bottom": 0.7875519394874573,
+            "left": 0.4502372741699219,
+            "right": 0.9986048936843872
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "8fba6d7e-4349-49aa-ab12-30086d4abe95",
+      "chunk_type": "text",
+      "text": "<a id='8fba6d7e-4349-49aa-ab12-30086d4abe95'></a>\n\nRegn <\n+1.00 dsph\n\n2.25 dsa.",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.6760572791099548,
+            "bottom": 0.7979124188423157,
+            "left": 0.020675525069236755,
+            "right": 0.42643553018569946
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "74984ad2-4a39-4d0d-b1aa-fd066c6d5832",
+      "chunk_type": "text",
+      "text": "<a id='74984ad2-4a39-4d0d-b1aa-fd066c6d5832'></a>\n\nAdd:- + 2.25 N4",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.7717818021774292,
+            "bottom": 0.8433853387832642,
+            "left": 0.06864891946315765,
+            "right": 0.4165838956832886
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "e9c47cf7-8578-4cde-9807-b97217b2babf",
+      "chunk_type": "text",
+      "text": "<a id='e9c47cf7-8578-4cde-9807-b97217b2babf'></a>\n\n7:00 AM 3 PM 9 PM\n\n2) Cap. Mennil -G\n\nMun / inlin V.Ixtila 3.\n\n-0-",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.7162305116653442,
+            "bottom": 0.8692904710769653,
+            "left": 0.47787171602249146,
+            "right": 0.9969210028648376
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "2a7c80c7-f08a-4bf3-81f7-cbf0dd83a578",
+      "chunk_type": "text",
+      "text": "<a id='2a7c80c7-f08a-4bf3-81f7-cbf0dd83a578'></a>\n\nZuk Leh Hmuam – Nun Titawilu I Do Ilang Ang u.",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.9070389866828918,
+            "bottom": 0.9830141663551331,
+            "left": 0.2201124131679535,
+            "right": 0.7840420007705688
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "9e6e4d9f-b908-4df3-a58c-1b202ae77791",
+      "chunk_type": "attestation",
+      "text": "<a id='9e6e4d9f-b908-4df3-a58c-1b202ae77791'></a>\n\n<::attestation: Signature\nStatus indicators - signed\nSignature: illegible\nReadable Text: 18/12/23\nA blue ink handwritten signature with a date below it, centered on a light background.::>",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.9066586494445801,
+            "bottom": 0.999947190284729,
+            "left": 0.8572841286659241,
+            "right": 0.9996697306632996
+          }
+        }
+      ]
+    }
+  ],
+  "medical_fields": {
+    "patient_name": "MA Japadar",
+    "date_of_birth": null,
+    "visit_date": "10.12.2025",
+    "diagnosis": [
+      "Presbyopia"
+    ],
+    "medications": [
+      "Lubrisa Ultra eye drops: 1 drop, 3 times a day",
+      "Cap. Mennil -G: 1 capsule, 3 times a day"
+    ],
+    "lab_values": [
+      {
+        "test": "V_A",
+        "value": "6/18"
+      },
+      {
+        "test": "CPH",
+        "value": "6/9"
+      },
+      {
+        "test": "Regn",
+        "value": "+1.00 dsph 2.25 dsa."
+      },
+      {
+        "test": "Add",
+        "value": "+ 2.25 N4"
+      }
+    ],
+    "doctor_name": "Dr. Lalhuthangi Hmar (Mami)",
+    "referred_specialist": null,
+    "follow_up_date": null,
+    "summary": "Patient MA Japadar (56/M) visited Dr. Lalhuthangi Hmar on 10.12.2025. Diagnosis is Presbyopia. Treatment includes Lubrisa Ultra eye drops and Cap. Memiif -G."
+  }
+}

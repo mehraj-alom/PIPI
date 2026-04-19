@@ -336,6 +336,14 @@ To remove all data:
 docker-compose down -v
 ```
 
+## Azure Deployment (Manual, Low Budget)
+
+For Azure for Students and minimum-cost hosting, use the manual Azure Container Apps deployment flow described in the chat steps.
+
+CI workflow included:
+
+- `.github/workflows/ci.yml`
+
 ## Local Web UI (HTML/CSS/JS)
 
 The repository includes a lightweight frontend in `webui/`.

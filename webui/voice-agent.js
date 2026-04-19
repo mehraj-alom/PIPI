@@ -63,7 +63,19 @@ const $ = (id) => document.getElementById(id);
 // ── Helpers ─────────────────────────────────────────────────
 function getApiBase() {
   const el = $('apiBase');
-  return el ? el.value.trim().replace(/\/+$/, '') : 'http://127.0.0.1:8000';
+  const inputValue = el ? el.value.trim().replace(/\/+$/, '') : '';
+  if (inputValue) return inputValue;
+
+  const bodyValue = (document.body?.dataset?.apiBase || '').trim().replace(/\/+$/, '');
+  if (bodyValue) return bodyValue;
+
+  const host = window.location?.hostname || '';
+  const isLocalHost = ['localhost', '127.0.0.1', '0.0.0.0'].includes(host);
+  if (window.location?.origin && !isLocalHost) {
+    return window.location.origin;
+  }
+
+  return 'http://127.0.0.1:8000';
 }
 
 function timeStr() {

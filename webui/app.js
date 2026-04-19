@@ -68,9 +68,20 @@ function buildHeaders(sessionId) {
 }
 
 function resolveApiBase() {
+  const inputBase = byId("apiBase")?.value || "";
+  const inputCleaned = inputBase.trim().replace(/\/+$/, "");
+  if (inputCleaned) return inputCleaned;
+
   const explicit = document.body?.dataset?.apiBase || "";
   const cleaned = explicit.trim().replace(/\/+$/, "");
   if (cleaned) return cleaned;
+
+  const host = window.location?.hostname || "";
+  const isLocalHost = ["localhost", "127.0.0.1", "0.0.0.0"].includes(host);
+  if (window.location?.origin && !isLocalHost) {
+    return window.location.origin;
+  }
+
   return "http://127.0.0.1:8000";
 }
 

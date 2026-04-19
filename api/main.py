@@ -42,6 +42,10 @@ app.include_router(skintelligent_router.router)
 app.include_router(document_router.document_router)
 app.include_router(voice_agent_router.router)
 
+# why ? coz  the web UI from the same backend host in production.
+# This avoids extra hosting costs and removes cross-origin issues.
+app.mount("/", StaticFiles(directory="webui", html=True), name="webui")
+
 @app.on_event("startup")
 async def startup_event():
     """Initialize the vision pipeline on startup."""

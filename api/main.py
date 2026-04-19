@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.services.SKIN_TELLIGENT.inference import InferencePipeline
 from backend.services.output_context import CaseOutputManager
 from logger import SKIN_TELLIGENT_logger as logger
-from api.routers import skintelligent_router , document_router
+from api.routers import skintelligent_router , document_router , voice_agent_router
 
 app = FastAPI(
     title="OptimaCare Voice AI Backend",
@@ -37,6 +37,8 @@ app.add_middleware(
 
 app.include_router(skintelligent_router.router)
 app.include_router(document_router.document_router)
+app.include_router(voice_agent_router.router)
+
 @app.on_event("startup")
 async def startup_event():
     """Initialize the vision pipeline on startup."""

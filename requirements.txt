@@ -40,3 +40,7 @@ httpx==0.28.1
 
 #report gen 
 fpdf2 
+
+#db
+sqlalchemy
+alembic

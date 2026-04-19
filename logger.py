@@ -58,3 +58,4 @@ def create_module_logger(name):
 main_logger = create_module_logger("main")
 SKIN_TELLIGENT_logger = create_module_logger("SKIN_TELLIGENT")
 DocProcess_logger = create_module_logger("DocProcess")
+Database_logger = create_module_logger("Database")

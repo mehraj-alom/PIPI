@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pipi-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+    env_file:
+      - .env
+    volumes:
+      - ./output:/app/output
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+      - ./artifacts:/app/artifacts
+    networks:
+      - pipi-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+  webui:
+    image: python:3.11-slim
+    container_name: pipi-webui
+    working_dir: /webui
+    ports:
+      - "5502:5501"
+    volumes:
+      - ./webui:/webui
+    networks:
+      - pipi-network
+    command: python -m http.server 5501 --directory /webui
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+
+networks:
+  pipi-network:
+    driver: bridge
+
+volumes:
+  output:
+  logs:
+  uploads:

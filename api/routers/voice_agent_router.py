@@ -2,14 +2,16 @@ import re
 from datetime import datetime
 
 import httpx
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 
 from backend.database.connections import SessionLocal
 from backend.database.queries import (
     get_patient_by_phone,
+    get_patient_by_id,
     get_patient_by_name_exact,
     get_patient_name_suggestions,
     upsert_patient,
+    get_doctor_by_id,
     get_available_doctors,
     get_available_slots_for_doctor_date,
     create_appointment,
@@ -19,6 +21,8 @@ from backend.database.queries import (
     reschedule_appointment,
     AppointmentConflictError,
 )
+from backend.services.doctor_case_packet import build_doctor_case_packet
+from backend.services.smtp_notifications import send_doctor_appointment_email
 
 from config.voice_agent_schemas import (
     GetPatientDetailsReq,
@@ -200,7 +204,7 @@ def check_doctor_availability(req: CheckDoctorAvailabilityReq, db = Depends(get_
 
 
 @router.post("/bookAppointment", description="Book a new appointment with a doctor.")
-def book_appointment(req: BookAppointmentReq, db = Depends(get_db)):
+def book_appointment(request: Request, req: BookAppointmentReq, db = Depends(get_db)):
     try:
         pid = int(req.patient_id)
         dt = datetime.strptime(req.appointment_date, "%Y-%m-%d").date()
@@ -226,11 +230,51 @@ def book_appointment(req: BookAppointmentReq, db = Depends(get_db)):
             appointment_date=dt,
             time_slot=req.time_slot
         )
+        doctor = get_doctor_by_id(db, req.doctor_id)
+        patient = get_patient_by_id(db, pid)
+        notification = None
+        case_packet = None
+        if doctor is not None and patient is not None:
+            case_manager = getattr(request.app.state, "case_output_manager", None)
+            case_context = None
+            if case_manager is not None and hasattr(case_manager, "get_existing"):
+                case_context = case_manager.get_existing(patient_id=str(pid))
+
+            case_packet = build_doctor_case_packet(
+                patient=patient,
+                doctor=doctor,
+                appointment_date=appointment.date,
+                time_slot=appointment.time_slot,
+                appointment_id=appointment.id,
+                case_context=case_context,
+            )
+            notification = send_doctor_appointment_email(
+                doctor=doctor,
+                patient=patient,
+                appointment_date=appointment.date,
+                time_slot=appointment.time_slot,
+                appointment_id=appointment.id,
+                case_id=case_packet.case_id if case_packet else None,
+                report_pdf_path=case_packet.report_pdf_path if case_packet else None,
+                attachment_paths=case_packet.original_attachment_paths if case_packet else None,
+            )
         return {
             "success": True,
             "appointment_id": appointment.id,
             "status": getattr(appointment.status, "value", appointment.status),
             "already_booked": False,
+            "doctor_notified": getattr(notification, "sent", False) if notification else False,
+            "doctor_notification": {
+                "sent": getattr(notification, "sent", False) if notification else False,
+                "recipient": getattr(notification, "recipient", None) if notification else None,
+                "error": getattr(notification, "error", None) if notification else "Doctor or patient record could not be loaded after booking.",
+                "attachment_count": getattr(notification, "attachment_count", 0) if notification else 0,
+            },
+            "doctor_case_packet": {
+                "case_id": getattr(case_packet, "case_id", None) if case_packet else None,
+                "report_pdf": str(getattr(case_packet, "report_pdf_path", "")) if case_packet else None,
+                "original_attachment_count": len(getattr(case_packet, "original_attachment_paths", [])) if case_packet else 0,
+            },
         }
     except AppointmentConflictError:
         return {"error": "The selected time slot is no longer available."}

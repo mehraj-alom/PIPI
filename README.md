@@ -10,7 +10,7 @@
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-F7DF1E?style=for-the-badge"></a>
 </p>
 
-PIPI is an AI-powered medical upload and care-navigation system built on FastAPI. In this repo, skin-image analysis, document extraction, and voice-assisted scheduling are brought into one case-based workflow instead of being handled as separate tools.
+PIPI is an AI-powered medical upload and care-navigation system built on FastAPI. In this repo, skin-image analysis, document extraction, voice-assisted scheduling, and backend doctor handoff are brought into one case-based workflow instead of being handled as separate tools.
 
 > Medical disclaimer: This project is built for research and educational use only. It is not a diagnostic tool and should not be used as a substitute for licensed clinical judgment.
 
@@ -24,6 +24,7 @@ This project brings them together in one interface:
 - medical documents go through a structured extraction pipeline that returns markdown, chunks, and medical fields
 - the floating call button opens a voice agent that can manage patient lookup and appointment actions while also triggering uploads from the call UI
 - a shared `patient_id` or `x-session-id` keeps outputs grouped under one case folder in `output/`
+- when an appointment is booked, the backend can generate a doctor case packet PDF and email it with the original uploaded files attached
 
 The result is a cleaner pre-visit workflow where patient material is organized before the appointment, reducing repeated intake and saving clinician time.
 
@@ -44,6 +45,7 @@ PIPI solves that with a unified case workflow:
 - one UI for skin uploads, document uploads, and scheduling support
 - one backend for vision, document parsing, and voice-agent tools
 - one case context for outputs tied to a patient or session
+- one backend doctor handoff that can assemble the case folder into a doctor-facing report package
 - one patient-facing entry point that can escalate into richer clinical support when needed
 
 The floating call button is not just a voice shortcut. In this repo it can open an in-call upload modal and send skin images or documents straight to the backend.
@@ -101,6 +103,10 @@ call_sessions"]
     SkinPipeline --> Case["Shared case folder
 output/<case_id>/"]
     DocPipeline --> Case
+    VoiceAPI --> Packet["Doctor packet builder
+fpdf2 + SMTP"]
+    Case --> Packet
+    Packet --> Doctor["Doctor inbox"]
 ```
 
 ## Voice-Assisted Upload Flow
@@ -133,6 +139,7 @@ sequenceDiagram
 | Explainability | Grad-CAM++ | Visual attribution over skin regions |
 | Document pipeline | Python-based document extraction stack | Extracts markdown, chunks, and structured medical fields |
 | Voice workflow | ElevenLabs browser client + FastAPI tools | Voice-guided patient lookup, scheduling, and upload triggering |
+| Doctor handoff | fpdf2 + SMTP | Builds doctor-facing case packets and emails them with original uploads attached |
 | Database | SQLite, SQLAlchemy, Alembic | Patients, doctors, appointments, and call sessions |
 | Frontend | HTML, CSS, JavaScript | Upload UI and floating phone widget |
 | Packaging | Docker, Docker Compose | Local and containerized deployment |
@@ -185,14 +192,96 @@ The current repo already supports the pieces that make this handoff useful:
 - parsed document outputs with structured medical fields
 - appointment and patient context in the scheduling workflow
 - case-based storage under a shared output folder
+- automatic backend doctor packet generation at booking time
 
-## Interface Placeholders
+## Automated Doctor Packet
 
-Replace these repo-local placeholders with your actual screenshots once you add them to the repository.
+When a new appointment is created through `POST /tools/VoiceAgent/bookAppointment`, the backend can recover the linked case folder, assemble a doctor-facing PDF, and send the result by SMTP without relying on the UI.
 
-![PIPI landing screen placeholder](docs/images/pipi-home-placeholder.svg)
+The generated doctor packet can include:
 
-![PIPI uploads and voice widget placeholder](docs/images/pipi-uploads-voice-placeholder.svg)
+- the original uploaded skin image
+- the detection-box visualization
+- Grad-CAM++ overlays
+- the saved classification report
+- the original uploaded prescription or lab report
+- extracted medical fields
+- extracted markdown or raw parsed text
+
+The outgoing email can attach:
+
+- one combined doctor packet PDF
+- the original skin image files from `skintelligent/images/`
+- the original uploaded medical documents from `documents/originals/`
+
+This keeps the booking flow patient-facing while moving the doctor handoff into the backend.
+
+## UI Demo
+
+The current UI has two main surfaces: a landing page for the upload journey and a case dashboard with the floating voice widget. During a live call, the assistant can trigger the upload modal automatically so the patient can submit a skin image without leaving the conversation.
+
+<p align="center">
+  <img src="docs/images/o1.png" alt="PIPI landing page" width="900" />
+</p>
+<p align="center"><em>Landing view with upload-first messaging and the floating call entry point.</em></p>
+
+<p align="center">
+  <img src="docs/images/02.png" alt="PIPI upload dashboard showing skin and document panels" width="900" />
+</p>
+<p align="center"><em>Case dashboard with patient context, skin upload, document upload, and the voice widget.</em></p>
+
+<p align="center">
+  <img src="docs/gif/skintelligent_inference_on_call.gif" alt="In-call skin upload modal opening automatically during a voice session" width="360" />
+</p>
+<p align="center"><em>During the call, the assistant can request a skin image and the upload window opens automatically in the same session.</em></p>
+
+## Example Call Transcript
+
+This transcript is adapted from a real demo flow and lightly edited for readability. Personal details are redacted for a public README.
+
+**Agent:** Hello, welcome to PIPI. How may I help you?
+
+**User:** I have a skin disease on my left leg finger.
+
+**Agent:** I understand. To help with that, I need to ask a few questions. Could you please tell me your full legal name and phone number?
+
+**User:** My name is `[redacted]`, and my phone number is `[redacted]`.
+
+**Agent:** Since you're not in our system yet, I can register you as a new patient. To do that, I need your full legal name, phone number, and, if you're comfortable sharing, your age and any existing medical conditions.
+
+**User:** My name is `[redacted]`. My phone number is `[redacted]`. My age is 22, and I have a skin disease on my left leg finger.
+
+**Agent:** Thank you for clarifying. So your name is `[redacted]`, your phone number is `[redacted]`, and your age is 22. You also mentioned a skin disease on your left leg finger. Is that correct?
+
+**User:** Yes.
+
+**Agent:** Great. You're now registered in our system with patient ID `4`.
+
+**Agent:** Regarding your skin condition, would you be comfortable uploading a photo of the affected area? This can help the doctor assess your condition before your appointment.
+
+**User:** Yeah, sure.
+
+**Agent:** Please hold on while I open the upload window for you to send the photo of your skin condition.
+
+**Agent:** Thank you for uploading the image. Our system analyzed it and detected a high probability of `Nail Fungus And Other Nail Disease`.
+
+**Agent:** Would you like to book an appointment with a dermatologist to discuss this further?
+
+**User:** I’ll book an appointment with a dermatologist, but I visited another doctor a few days ago, so I have a prescription as well.
+
+**Agent:** We can definitely book that appointment. Before we do, would you like to upload your existing prescription too? That can give the doctor more context.
+
+**User:** Yeah, sure.
+
+**Agent:** Please hold on while I open the upload window for you to send your prescription.
+
+**Agent:** Thank you for uploading your prescription. It has been received.
+
+**Agent:** Now let’s proceed with booking your appointment with a dermatologist. Do you have a specific dermatologist in mind, or would you like me to find an available one for you?
+
+**User:** Book an appointment with any dermatologist on sunday morning.
+
+**Note:** The demo call ended at this point because the session hit the available free-credit limit, but it shows the intended end-to-end flow: patient registration, in-call skin upload, automated skin inference, prescription upload, and appointment handoff.
 
 ## What Is In This Repo
 
@@ -243,12 +332,27 @@ The upload modal triggered during a call can send:
 - `lab_report` to `POST /ade/upload`
 - `prescription` to `POST /ade/upload`
 
+When appointment booking succeeds, the backend can also:
+
+- recover the linked case folder for the patient or session
+- generate a doctor packet PDF under `output/<case_id>/doctor_reports/`
+- email the doctor by SMTP with the PDF plus original uploaded files attached
+
+### 4. Doctor Notification Workflow
+
+- Trigger: successful `POST /tools/VoiceAgent/bookAppointment`
+- Input source: the existing patient/session case folder in `output/<case_id>/`
+- PDF contents: skin image, detection overlay, Grad-CAM++, extracted document fields, and extracted markdown/text
+- Email attachments: the generated PDF plus original uploaded files
+- Failure mode: appointment booking still succeeds even if SMTP delivery fails
+
 ## Case Output Layout
 
 When the same `patient_id` or `x-session-id` is reused, skin and document outputs can live under the same case folder:
 
 ```text
 output/<case_id>/
+  case_context.json
   skintelligent/
     images/
     detections/
@@ -258,6 +362,8 @@ output/<case_id>/
   documents/
     originals/
     parsed/
+  doctor_reports/
+    doctor_case_packet_<patient>_<timestamp>.pdf
 ```
 
 ## Repo Layout
@@ -280,16 +386,6 @@ Dockerfile
 docker-compose.yml
 ```
 
-## Environment
-
-Create a `.env` file in the repository root. The current repo expects these values when the related workflows are used:
-
-- `OPENAI_API_KEY` for the document extraction pipeline
-- `VISION_AGENT_API_KEY` or `VISION_API_KEY` for the document extraction pipeline
-- `ELEVENLABS_API_KEY` for voice-agent session startup
-- `ELEVENLABS_AGENT_ID` for the browser voice widget
-- `DATABASE_URL` is optional and defaults to SQLite at `.langgraph/app.sqlite`
-
 ## Run Locally
 
 Install dependencies:
@@ -297,6 +393,8 @@ Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+
+If you want automatic doctor email handoff, add your SMTP values to `.env` using [.env.example](.env.example) as the template.
 
 Run database migrations:
 
@@ -350,7 +448,7 @@ GET /health
 Run tests:
 
 ```bash
-pytest -q
+./venv/bin/python -m pytest -q tests/
 ```
 
 CI is also configured in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).

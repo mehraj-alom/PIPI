@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
@@ -65,6 +66,7 @@ def test_skin_endpoint_returns_pipeline_output(monkeypatch):
 def _build_voice_app():
     app = FastAPI()
     app.include_router(voice_agent_router.router)
+    app.state.case_output_manager = SimpleNamespace(get_existing=lambda **_: None)
     return app
 
 
@@ -229,6 +231,142 @@ def test_book_appointment_returns_existing_for_duplicate_request(monkeypatch):
         "appointment_id": 7,
         "status": "confirmed",
         "already_booked": True,
+    }
+
+
+def test_book_appointment_sends_doctor_notification(monkeypatch):
+    monkeypatch.setattr(
+        voice_agent_router,
+        "get_patient_appointment_for_slot",
+        lambda *args, **kwargs: None,
+    )
+    monkeypatch.setattr(
+        voice_agent_router,
+        "create_appointment",
+        lambda *args, **kwargs: SimpleNamespace(id=11, status="confirmed", date="2026-04-20", time_slot="10:00"),
+    )
+    monkeypatch.setattr(
+        voice_agent_router,
+        "get_doctor_by_id",
+        lambda *args, **kwargs: SimpleNamespace(id=3, email="doctor@example.com", name="Dr. Maya Reed", specialization="Dermatology"),
+    )
+    monkeypatch.setattr(
+        voice_agent_router,
+        "get_patient_by_id",
+        lambda *args, **kwargs: SimpleNamespace(id=2, name="John Doe", phone="1234567890", age=28, conditions=["eczema"]),
+    )
+    monkeypatch.setattr(
+        voice_agent_router,
+        "build_doctor_case_packet",
+        lambda **kwargs: SimpleNamespace(
+            case_id="case-1",
+            report_pdf_path=Path("output/case-1/doctor_reports/report.pdf"),
+            original_attachment_paths=[Path("output/case-1/skintelligent/images/original.jpg"), Path("output/case-1/documents/originals/prescription.png")],
+        ),
+    )
+
+    captured = {}
+
+    def _fake_notify(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(sent=True, recipient="doctor@example.com", error=None, attachment_count=3)
+
+    monkeypatch.setattr(voice_agent_router, "send_doctor_appointment_email", _fake_notify)
+
+    app = _build_voice_app()
+    app.dependency_overrides[voice_agent_router.get_db] = _override_db
+    client = TestClient(app)
+
+    resp = client.post(
+        "/tools/VoiceAgent/bookAppointment",
+        json={
+            "doctor_id": 3,
+            "patient_id": "2",
+            "appointment_date": "2026-04-20",
+            "time_slot": "10:00",
+        },
+    )
+
+    assert resp.status_code == 200
+    assert captured["appointment_id"] == 11
+    assert captured["time_slot"] == "10:00"
+    assert resp.json()["doctor_notified"] is True
+    assert resp.json()["doctor_notification"] == {
+        "sent": True,
+        "recipient": "doctor@example.com",
+        "error": None,
+        "attachment_count": 3,
+    }
+    assert resp.json()["doctor_case_packet"] == {
+        "case_id": "case-1",
+        "report_pdf": "output/case-1/doctor_reports/report.pdf",
+        "original_attachment_count": 2,
+    }
+
+
+def test_book_appointment_survives_doctor_notification_failure(monkeypatch):
+    monkeypatch.setattr(
+        voice_agent_router,
+        "get_patient_appointment_for_slot",
+        lambda *args, **kwargs: None,
+    )
+    monkeypatch.setattr(
+        voice_agent_router,
+        "create_appointment",
+        lambda *args, **kwargs: SimpleNamespace(id=12, status="confirmed", date="2026-04-20", time_slot="10:30"),
+    )
+    monkeypatch.setattr(
+        voice_agent_router,
+        "get_doctor_by_id",
+        lambda *args, **kwargs: SimpleNamespace(id=4, email="doctor@example.com", name="Dr. Maya Reed", specialization="Dermatology"),
+    )
+    monkeypatch.setattr(
+        voice_agent_router,
+        "get_patient_by_id",
+        lambda *args, **kwargs: SimpleNamespace(id=2, name="John Doe", phone="1234567890", age=28, conditions=["eczema"]),
+    )
+    monkeypatch.setattr(
+        voice_agent_router,
+        "build_doctor_case_packet",
+        lambda **kwargs: SimpleNamespace(
+            case_id="case-2",
+            report_pdf_path=Path("output/case-2/doctor_reports/report.pdf"),
+            original_attachment_paths=[Path("output/case-2/skintelligent/images/original.jpg")],
+        ),
+    )
+    monkeypatch.setattr(
+        voice_agent_router,
+        "send_doctor_appointment_email",
+        lambda **kwargs: SimpleNamespace(sent=False, recipient="doctor@example.com", error="smtp down", attachment_count=2),
+    )
+
+    app = _build_voice_app()
+    app.dependency_overrides[voice_agent_router.get_db] = _override_db
+    client = TestClient(app)
+
+    resp = client.post(
+        "/tools/VoiceAgent/bookAppointment",
+        json={
+            "doctor_id": 4,
+            "patient_id": "2",
+            "appointment_date": "2026-04-20",
+            "time_slot": "10:30",
+        },
+    )
+
+    assert resp.status_code == 200
+    assert resp.json()["success"] is True
+    assert resp.json()["doctor_notified"] is False
+    assert resp.json()["doctor_notification"] == {
+        "sent": False,
+        "recipient": "doctor@example.com",
+        "error": "smtp down",
+        "attachment_count": 2,
+    }
+    assert resp.json()["doctor_case_packet"] == {
+        "case_id": "case-2",
+        "report_pdf": "output/case-2/doctor_reports/report.pdf",
+        "original_attachment_count": 1,
     }
 
 

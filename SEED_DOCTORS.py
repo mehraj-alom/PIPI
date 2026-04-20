@@ -6,11 +6,11 @@ from backend.database.models import Doctor
 
 
 DOCTORS = [
-  {"name":"Dr. Aisha Rahman","specialization":"Dermatology","phone":"+919800000001","email":"aisha.rahman@optimacare.com","available_days":["monday","wednesday","friday"],"slot_start":"09:00:00","slot_end":"17:00:00","slot_duration":15},
+  {"name":"Dr. Aisha Rahman","specialization":"","phone":"+919800000001","email":"aisha.rahman@optimacare.com","available_days":["monday","wednesday","friday"],"slot_start":"09:00:00","slot_end":"17:00:00","slot_duration":15},
   {"name":"Dr. Neha Kapoor","specialization":"Dermatology","phone":"+919800000002","email":"neha.kapoor@optimacare.com","available_days":["tuesday","thursday","saturday"],"slot_start":"10:00:00","slot_end":"18:00:00","slot_duration":15},
   {"name":"Dr. Arjun Singh","specialization":"Dermatology","phone":"+919800000003","email":"arjun.singh@optimacare.com","available_days":["monday","tuesday","sunday"],"slot_start":"08:00:00","slot_end":"14:00:00","slot_duration":15},
   {"name":"Dr. Pooja Nair","specialization":"Dermatology","phone":"+919800000004","email":"pooja.nair@optimacare.com","available_days":["wednesday","thursday","saturday"],"slot_start":"11:00:00","slot_end":"19:00:00","slot_duration":15},
-  {"name":"Dr. Sameer Khan","specialization":"Dermatology","phone":"+919800000005","email":"sameer.khan@optimacare.com","available_days":["friday","saturday","sunday"],"slot_start":"09:00:00","slot_end":"15:00:00","slot_duration":15},
+  {"name":"Dr. Sameer Khan","specialization":"Dermatology","phone":"+919800000005","email":"mehrajalom0@gmail.com","available_days":["friday","saturday","sunday"],"slot_start":"09:00:00","slot_end":"15:00:00","slot_duration":15},
 
   {"name":"Dr. Vikram Mehta","specialization":"Cardiology","phone":"+919800000006","email":"vikram.mehta@optimacare.com","available_days":["tuesday","thursday","saturday"],"slot_start":"10:00:00","slot_end":"16:00:00","slot_duration":15},
   {"name":"Dr. Rahul Verma","specialization":"Cardiology","phone":"+919800000007","email":"rahul.verma@optimacare.com","available_days":["monday","wednesday","friday"],"slot_start":"09:00:00","slot_end":"15:00:00","slot_duration":15},
@@ -98,7 +98,7 @@ DOCTORS = [
 
 
 
-def _parse_time(value: Any, default_value: time) -> time:
+def parse_time(value: Any, default_value: time) -> time:
   if isinstance(value, time):
     return value
   if isinstance(value, str):
@@ -109,9 +109,64 @@ def _parse_time(value: Any, default_value: time) -> time:
   return default_value
 
 
+def find_existing_doctor(
+  session,
+  *,
+  name: str,
+  specialization: str,
+  phone: Any,
+  email: Any,
+) -> Doctor | None:
+  exact_match = (
+    session.query(Doctor)
+    .filter(
+      Doctor.name == name,
+      Doctor.specialization == specialization,
+      Doctor.phone == phone,
+      Doctor.email == email,
+    )
+    .order_by(Doctor.id.asc())
+    .first()
+  )
+  if exact_match:
+    return exact_match
+
+  # Prefer stable contact fields next so reseeding updates the same row.
+  if phone:
+    existing = (
+      session.query(Doctor)
+      .filter(Doctor.phone == phone)
+      .order_by(Doctor.id.asc())
+      .first()
+    )
+    if existing:
+      return existing
+
+  if email:
+    existing = (
+      session.query(Doctor)
+      .filter(Doctor.email == email)
+      .order_by(Doctor.id.asc())
+      .first()
+    )
+    if existing:
+      return existing
+
+  return (
+    session.query(Doctor)
+    .filter(
+      Doctor.name == name,
+      Doctor.specialization == specialization,
+    )
+    .order_by(Doctor.id.asc())
+    .first()
+  )
+
+
 def seed_doctors() -> None:
   session = SessionLocal()
   created = 0
+  updated = 0
   skipped = 0
 
   try:
@@ -125,18 +180,39 @@ def seed_doctors() -> None:
         skipped += 1
         continue
 
-      existing = (
-        session.query(Doctor)
-        .filter(
-          Doctor.name == name,
-          Doctor.specialization == specialization,
-          Doctor.phone == phone,
-          Doctor.email == email,
-        )
-        .first()
+      available_days = raw.get("available_days") or []
+      slot_start = parse_time(raw.get("slot_start"), time(9, 0))
+      slot_end = parse_time(raw.get("slot_end"), time(17, 0))
+      slot_duration = int(raw.get("slot_duration") or 30)
+
+      existing = find_existing_doctor(
+        session,
+        name=name,
+        specialization=specialization,
+        phone=phone,
+        email=email,
       )
       if existing:
-        skipped += 1
+        changed = False
+        updated_fields = {
+          "name": name,
+          "specialization": specialization,
+          "phone": phone,
+          "email": email,
+          "available_days": available_days,
+          "slot_start": slot_start,
+          "slot_end": slot_end,
+          "slot_duration": slot_duration,
+        }
+        for field_name, value in updated_fields.items():
+          if getattr(existing, field_name) != value:
+            setattr(existing, field_name, value)
+            changed = True
+
+        if changed:
+          updated += 1
+        else:
+          skipped += 1
         continue
 
       doctor = Doctor(
@@ -144,16 +220,16 @@ def seed_doctors() -> None:
         specialization=specialization,
         phone=phone,
         email=email,
-        available_days=raw.get("available_days") or [],
-        slot_start=_parse_time(raw.get("slot_start"), time(9, 0)),
-        slot_end=_parse_time(raw.get("slot_end"), time(17, 0)),
-        slot_duration=int(raw.get("slot_duration") or 30),
+        available_days=available_days,
+        slot_start=slot_start,
+        slot_end=slot_end,
+        slot_duration=slot_duration,
       )
       session.add(doctor)
       created += 1
 
     session.commit()
-    print(f"Seed complete. Created: {created}, Skipped: {skipped}")
+    print(f"Seed complete. Created: {created}, Updated: {updated}, Skipped: {skipped}")
   except Exception:
     session.rollback()
     raise

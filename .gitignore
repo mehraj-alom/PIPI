@@ -15,6 +15,13 @@ __pycache__/
 *.svg
 *.webp  
 *.pdf
+# Allow README/demo media inside docs/
+!docs/**/*.png
+!docs/**/*.gif
+!docs/**/*.jpg
+!docs/**/*.jpeg
+!docs/**/*.svg
+!docs/**/*.webp
 # Distribution / packaging
 .Python
 build/

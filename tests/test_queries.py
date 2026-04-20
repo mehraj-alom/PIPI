@@ -3,7 +3,11 @@ from __future__ import annotations
 from datetime import date
 
 import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
+import SEED_DOCTORS
+from backend.database.connections import Base
 from backend.database.models import AppointmentStatus, Patient
 from backend.database.queries import (
     AppointmentConflictError,
@@ -169,3 +173,111 @@ def test_cancel_appointment_marks_status_and_reason(db_session, seeded_doctor, s
     cancelled = cancel_appointment(db_session, appointment.id, reason="Patient unavailable")
     assert cancelled.status == AppointmentStatus.CANCELLED
     assert "Patient unavailable" in cancelled.notes
+
+
+def test_seed_doctors_updates_existing_doctor_without_creating_duplicate(monkeypatch):
+    engine = create_engine("sqlite:///:memory:")
+    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    Base.metadata.create_all(bind=engine)
+
+    try:
+        session = TestingSessionLocal()
+        session.add(
+            SEED_DOCTORS.Doctor(
+                name="Dr. Sameer Khan",
+                specialization="Dermatology",
+                phone="+919800000005",
+                email="sameer.khan@optimacare.com",
+                available_days=["friday"],
+                slot_duration=30,
+            )
+        )
+        session.commit()
+        session.close()
+
+        monkeypatch.setattr(SEED_DOCTORS, "SessionLocal", TestingSessionLocal)
+        monkeypatch.setattr(
+            SEED_DOCTORS,
+            "DOCTORS",
+            [
+                {
+                    "name": "Dr. Sameer Khan",
+                    "specialization": "Dermatology",
+                    "phone": "+919800000005",
+                    "email": "mehrajalom0@gmail.com",
+                    "available_days": ["friday", "saturday", "sunday"],
+                    "slot_start": "09:00:00",
+                    "slot_end": "15:00:00",
+                    "slot_duration": 15,
+                }
+            ],
+        )
+
+        SEED_DOCTORS.seed_doctors()
+
+        verify = TestingSessionLocal()
+        doctors = verify.query(SEED_DOCTORS.Doctor).all()
+        assert len(doctors) == 1
+        assert doctors[0].email == "mehrajalom0@gmail.com"
+        assert doctors[0].available_days == ["friday", "saturday", "sunday"]
+        assert doctors[0].slot_duration == 15
+        verify.close()
+    finally:
+        Base.metadata.drop_all(bind=engine)
+
+
+def test_seed_doctors_prefers_exact_match_when_duplicates_already_exist(monkeypatch):
+    engine = create_engine("sqlite:///:memory:")
+    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    Base.metadata.create_all(bind=engine)
+
+    try:
+        session = TestingSessionLocal()
+        session.add_all(
+            [
+                SEED_DOCTORS.Doctor(
+                    name="Dr. Sameer Khan",
+                    specialization="Dermatology",
+                    phone="+919800000005",
+                    email="sameer.khan@optimacare.com",
+                ),
+                SEED_DOCTORS.Doctor(
+                    name="Dr. Sameer Khan",
+                    specialization="Dermatology",
+                    phone="+919800000005",
+                    email="mehrajalom0@gmail.com",
+                ),
+            ]
+        )
+        session.commit()
+        session.close()
+
+        monkeypatch.setattr(SEED_DOCTORS, "SessionLocal", TestingSessionLocal)
+        monkeypatch.setattr(
+            SEED_DOCTORS,
+            "DOCTORS",
+            [
+                {
+                    "name": "Dr. Sameer Khan",
+                    "specialization": "Dermatology",
+                    "phone": "+919800000005",
+                    "email": "mehrajalom0@gmail.com",
+                    "available_days": ["friday", "saturday", "sunday"],
+                    "slot_start": "09:00:00",
+                    "slot_end": "15:00:00",
+                    "slot_duration": 15,
+                }
+            ],
+        )
+
+        SEED_DOCTORS.seed_doctors()
+
+        verify = TestingSessionLocal()
+        doctors = verify.query(SEED_DOCTORS.Doctor).order_by(SEED_DOCTORS.Doctor.id.asc()).all()
+        assert len(doctors) == 2
+        assert doctors[0].email == "sameer.khan@optimacare.com"
+        assert doctors[1].email == "mehrajalom0@gmail.com"
+        assert doctors[1].available_days == ["friday", "saturday", "sunday"]
+        verify.close()
+    finally:
+        Base.metadata.drop_all(bind=engine)

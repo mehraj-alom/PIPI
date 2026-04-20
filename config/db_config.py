@@ -23,6 +23,16 @@ class Settings(BaseSettings):
     ELEVENLABS_API_KEY: str | None = None
     ELEVENLABS_VOICE_ID: str | None = None
     ELEVENLABS_AGENT_ID: str | None = None
+    
+    SMTP_HOST: str | None = None
+    SMTP_PORT: int = Field(default=587)
+    SMTP_USERNAME: str | None = None
+    SMTP_PASSWORD: str | None = None
+    SMTP_FROM_EMAIL: str | None = None
+    SMTP_FROM_NAME: str | None = Field(default="PIPI Care Navigator")
+    SMTP_USE_TLS: bool = Field(default=True)
+    SMTP_USE_SSL: bool = Field(default=False)
+    SMTP_TIMEOUT_SECONDS: float = Field(default=10.0)
 
     log_level: str = "INFO"
     allowed_origins: list[str] = ["*"]

@@ -4,13 +4,14 @@ from datetime import date
 
 import pytest
 
-from backend.database.models import AppointmentStatus
+from backend.database.models import AppointmentStatus, Patient
 from backend.database.queries import (
     AppointmentConflictError,
     cancel_appointment,
     create_appointment,
     format_time_slot,
     get_available_slots_for_doctor_date,
+    get_patient_name_suggestions,
     normalize_name,
     normalize_phone,
     parse_time_slot,
@@ -47,6 +48,20 @@ def test_upsert_patient_create_and_update(db_session):
     assert updated.id == created.id
     assert updated.age == 32
     assert updated.conditions == ["asthma", "allergy"]
+
+
+def test_get_patient_name_suggestions_returns_close_matches_in_order(db_session):
+    db_session.add_all(
+        [
+            Patient(name="Mehraj Alom", phone="3647849434", age=13, conditions=[]),
+            Patient(name="Meraj Alam Tabader", phone="6001549292", age=21, conditions=[]),
+        ]
+    )
+    db_session.commit()
+
+    suggestions = get_patient_name_suggestions(db_session, "Mehraj Alam")
+
+    assert [patient.name for patient in suggestions] == ["Mehraj Alom"]
 
 
 def test_upsert_call_session_create_then_update(db_session, seeded_patient):
@@ -107,14 +122,39 @@ def test_create_appointment_conflict_raises(db_session, seeded_doctor, seeded_pa
         time_slot="10:00",
     )
 
+    other_patient = Patient(name="Jane Doe", phone="+1987654321", age=34, conditions=["psoriasis"])
+    db_session.add(other_patient)
+    db_session.commit()
+    db_session.refresh(other_patient)
+
     with pytest.raises(AppointmentConflictError):
         create_appointment(
             db_session,
-            patient_id=seeded_patient.id,
+            patient_id=other_patient.id,
             doctor_id=seeded_doctor.id,
             appointment_date=monday_date,
             time_slot="10:00",
         )
+
+
+def test_create_appointment_is_idempotent_for_same_patient_slot(db_session, seeded_doctor, seeded_patient, monday_date):
+    first = create_appointment(
+        db_session,
+        patient_id=seeded_patient.id,
+        doctor_id=seeded_doctor.id,
+        appointment_date=monday_date,
+        time_slot="10:30",
+    )
+
+    second = create_appointment(
+        db_session,
+        patient_id=seeded_patient.id,
+        doctor_id=seeded_doctor.id,
+        appointment_date=monday_date,
+        time_slot="10:30",
+    )
+
+    assert second.id == first.id
 
 
 def test_cancel_appointment_marks_status_and_reason(db_session, seeded_doctor, seeded_patient, monday_date):

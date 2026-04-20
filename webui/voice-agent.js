@@ -24,9 +24,11 @@ async function loadSDK() {
 const DEFAULT_AGENT_ID = 'YOUR_AGENT_ID';
 let AGENT_ID = DEFAULT_AGENT_ID;
 let agentConfigPromise = null;
+let lastAgentConfigError = null;
+let signedUrlPromise = null;
 
-async function ensureAgentId() {
-  if (AGENT_ID && AGENT_ID !== DEFAULT_AGENT_ID) return AGENT_ID;
+async function ensureAgentId(forceRefresh = false) {
+  if (!forceRefresh && AGENT_ID && AGENT_ID !== DEFAULT_AGENT_ID) return AGENT_ID;
   if (agentConfigPromise) return agentConfigPromise;
 
   const apiBase = getApiBase();
@@ -36,18 +38,121 @@ async function ensureAgentId() {
       if (!res.ok) throw new Error(`Config request failed (${res.status})`);
 
       const data = await res.json();
-      const candidate = String(data?.agent_id || '').trim();
+      const candidate = normalizeAgentId(String(data?.agent_id || '').trim());
       if (candidate) {
         AGENT_ID = candidate;
       }
+      lastAgentConfigError = null;
       return AGENT_ID;
     } catch (err) {
+      lastAgentConfigError = err;
       console.warn('[VoiceAgent] Failed to load AGENT_ID from backend config:', err);
       return AGENT_ID;
+    } finally {
+      agentConfigPromise = null;
     }
   })();
 
   return agentConfigPromise;
+}
+
+function normalizeAgentId(rawAgentId) {
+  const raw = String(rawAgentId || '').trim();
+  if (!raw) return '';
+
+  const agentMatch = raw.match(/agent_[a-z0-9]+/i);
+  if (!agentMatch) return raw;
+
+  const branchMatch = raw.match(/agtbrch_[a-z0-9]+/i);
+  if (!branchMatch) return agentMatch[0];
+
+  return `${agentMatch[0]}?branchId=${branchMatch[0]}`;
+}
+
+function getAgentStartCandidates(agentId) {
+  const normalized = normalizeAgentId(agentId);
+  if (!normalized) return [];
+
+  const candidates = [normalized];
+  const baseId = normalized.split('?')[0];
+  if (baseId && baseId !== normalized) {
+    candidates.push(baseId);
+  }
+  return candidates;
+}
+
+function isTokenFetch400Error(error) {
+  const text = String(error?.message || '').toLowerCase();
+  return text.includes('failed to fetch conversation token')
+    && text.includes('api returned 400');
+}
+
+async function fetchSignedUrl() {
+  if (signedUrlPromise) return signedUrlPromise;
+
+  const apiBase = getApiBase();
+  signedUrlPromise = (async () => {
+    const res = await fetch(`${apiBase}/tools/VoiceAgent/signed-url`);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(data?.detail || `Signed URL request failed (${res.status})`);
+    }
+
+    const signedUrl = String(data?.signed_url || '').trim();
+    if (!signedUrl) {
+      throw new Error('Signed URL missing from backend response.');
+    }
+    return signedUrl;
+  })();
+
+  try {
+    return await signedUrlPromise;
+  } finally {
+    signedUrlPromise = null;
+  }
+}
+
+function shouldTryWebSocketFallback(error) {
+  const errorText = String(error?.message || '').toLowerCase();
+  return errorText.includes('failed to fetch conversation token')
+    || errorText.includes('could not establish pc connection')
+    || errorText.includes('failed to establish pc connection')
+    || errorText.includes('ice')
+    || errorText.includes('webrtc')
+    || errorText.includes('timed out');
+}
+
+function mapVoiceStartError(error) {
+  const errorText = String(error?.message || '').toLowerCase();
+
+  if (error?.name === 'NotAllowedError') {
+    return 'Microphone access denied';
+  }
+
+  if (errorText.includes('failed to fetch conversation token')) {
+    return 'Invalid or inactive ElevenLabs agent/branch configuration';
+  }
+
+  if (errorText.includes('could not establish pc connection') || errorText.includes('failed to establish pc connection')) {
+    return 'WebRTC peer connection failed. Disable VPN/firewall blocks and try a different network.';
+  }
+
+  if (errorText.includes('ice') || errorText.includes('webrtc')) {
+    return 'Network blocked WebRTC connectivity. Check firewall/VPN and retry.';
+  }
+
+  return error?.message || 'Connection failed';
+}
+
+function startSessionWithTimeout(startSessionPromise, timeoutMs = 20000) {
+  return Promise.race([
+    startSessionPromise,
+    new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error('Call setup timed out. Check network/VPN and retry.'));
+      }, timeoutMs);
+    }),
+  ]);
 }
 
 // ── State ───────────────────────────────────────────────────
@@ -56,6 +161,8 @@ let timerInterval = null;
 let timerSeconds = 0;
 let currentMode = 'idle'; // idle | connecting | ringing | active | ended | error
 let waveformRAF = null;
+let callAttemptSeq = 0;
+let voiceUiInitialized = false;
 
 // ── DOM refs (populated in init) ────────────────────────────
 const $ = (id) => document.getElementById(id);
@@ -116,7 +223,15 @@ function notifyToolOutcome(endpoint, data) {
       notifyToast('Availability checked', Array.isArray(data?.available_slots) && data.available_slots.length > 0 ? `${data.available_slots.length} slot(s) available.` : 'No slots matched the requested time.', Array.isArray(data?.available_slots) && data.available_slots.length > 0 ? 'success' : 'warning');
       break;
     case 'bookAppointment':
-      notifyToast('Doctor booked', data?.appointment_id ? `Appointment ${data.appointment_id} has been scheduled.` : 'Appointment scheduled successfully.', 'success');
+      notifyToast(
+        data?.already_booked ? 'Appointment already booked' : 'Doctor booked',
+        data?.appointment_id
+          ? (data?.already_booked
+            ? `Appointment ${data.appointment_id} was already confirmed.`
+            : `Appointment ${data.appointment_id} has been scheduled.`)
+          : 'Appointment scheduled successfully.',
+        'success',
+      );
       break;
     case 'cancelAppointment':
       notifyToast('Appointment cancelled', data?.appointment_id ? `Appointment ${data.appointment_id} was cancelled.` : 'Appointment cancelled successfully.', 'success');
@@ -130,6 +245,17 @@ function notifyToolOutcome(endpoint, data) {
     default:
       notifyToast(titleCaseEndpoint(endpoint), 'Request completed successfully.', 'success');
       break;
+  }
+}
+
+function syncCaseContextFromToolResult(endpoint, data) {
+  if (!data || typeof data !== 'object') return;
+
+  if ((endpoint === 'getPatientDetails' || endpoint === 'registerNewPatient') && data.patient_id) {
+    const patientIdInput = $('patientId');
+    if (patientIdInput) {
+      patientIdInput.value = String(data.patient_id);
+    }
   }
 }
 
@@ -149,9 +275,23 @@ function normalizeUploadType(uploadType) {
 
   if (raw === 'skin_image' || raw.includes('skin')) return 'skin_image';
   if (raw === 'prescription' || raw.includes('prescription')) return 'prescription';
-  if (raw === 'lab_report' || raw.includes('lab') || raw.includes('report') || raw.includes('document')) return 'lab_report';
+  if (
+    raw === 'lab_report'
+    || raw.includes('lab')
+    || raw.includes('report')
+    || raw.includes('document')
+    || raw.includes('record')
+    || raw.includes('medical')
+  ) {
+    return 'lab_report';
+  }
 
   return 'lab_report';
+}
+
+function hasMicrophoneSupport() {
+  return typeof navigator !== 'undefined'
+    && typeof navigator.mediaDevices?.getUserMedia === 'function';
 }
 
 // ================================================================
@@ -160,57 +300,191 @@ function normalizeUploadType(uploadType) {
 
 async function startCall() {
   if (conversation) return;
+  const attemptId = ++callAttemptSeq;
 
   await ensureAgentId();
+  if (AGENT_ID === DEFAULT_AGENT_ID) {
+    await ensureAgentId(true);
+  }
 
   if (AGENT_ID === DEFAULT_AGENT_ID) {
-    setCallState('error', 'Set ELEVENLABS_AGENT_ID in .env and restart backend');
+    const configLoadFailed = !!lastAgentConfigError;
+    const errorMessage = configLoadFailed
+      ? `Could not load voice config from backend (${getApiBase()}). Check API Base URL and backend status.`
+      : 'Set ELEVENLABS_AGENT_ID in .env and restart backend';
+    setCallState('error', errorMessage);
     return;
   }
 
   try {
     setCallState('connecting');
 
+    if (!hasMicrophoneSupport()) {
+      throw new Error('Microphone access is unavailable in this browser context. Use HTTPS or localhost in a supported browser.');
+    }
+
     // Load SDK if not loaded
     await loadSDK();
 
     // Request microphone
-    await navigator.mediaDevices.getUserMedia({ audio: true });
+    const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    micStream.getTracks().forEach((track) => track.stop());
     setCallState('ringing');
 
-    conversation = await Conversation.startSession({
-      agentId: AGENT_ID,
+    const sessionHandlers = {
       clientTools: buildClientTools(),
       onConnect: () => {
+        if (attemptId !== callAttemptSeq) return;
+        // Force output volume on connect in case stale mute state persists.
+        if (conversation?.setVolume) {
+          conversation.setVolume({ volume: 1 });
+        }
         setCallState('active');
         startTimer();
       },
       onDisconnect: () => {
+        if (attemptId !== callAttemptSeq) return;
         setCallState('ended');
         stopTimer();
         conversation = null;
       },
       onModeChange: ({ mode }) => {
+        if (attemptId !== callAttemptSeq) return;
         updateAgentMode(mode);
       },
       onError: (e) => {
+        if (attemptId !== callAttemptSeq) return;
         console.error('[VoiceAgent] Session error:', e);
-        setCallState('error', 'Connection lost');
+        setCallState('error', mapVoiceStartError(e));
         stopTimer();
         conversation = null;
       },
-    });
+    };
+
+    let lastError = null;
+    let attemptedWebSocketFallback = false;
+    let usedWebSocketFallback = false;
+    const candidateAgentIds = getAgentStartCandidates(AGENT_ID);
+    for (let i = 0; i < candidateAgentIds.length; i += 1) {
+      const candidateAgentId = candidateAgentIds[i];
+      try {
+        const startedSession = await startSessionWithTimeout(
+          Conversation.startSession({
+            agentId: candidateAgentId,
+            ...sessionHandlers,
+          }),
+          20000,
+        );
+
+        if (attemptId !== callAttemptSeq) {
+          try {
+            await startedSession.endSession();
+          } catch {
+            // ignore late cleanup errors
+          }
+          throw new Error('Call was superseded by a newer attempt.');
+        }
+
+        conversation = startedSession;
+
+        AGENT_ID = candidateAgentId;
+        lastError = null;
+        break;
+      } catch (sessionErr) {
+        lastError = sessionErr;
+        const canRetryWithoutBranch = i < candidateAgentIds.length - 1
+          && candidateAgentId.includes('?branchId=')
+          && isTokenFetch400Error(sessionErr);
+        if (canRetryWithoutBranch) {
+          console.warn('[VoiceAgent] Token fetch failed for branch; retrying with base agent ID.');
+          continue;
+        }
+        break;
+      }
+    }
+
+    if (!conversation && lastError && shouldTryWebSocketFallback(lastError)) {
+      attemptedWebSocketFallback = true;
+      console.warn('[VoiceAgent] Retrying with WebSocket transport after WebRTC setup failure.');
+
+      for (let i = 0; i < candidateAgentIds.length; i += 1) {
+        const candidateAgentId = candidateAgentIds[i];
+        try {
+          const startedSession = await startSessionWithTimeout(
+            Conversation.startSession({
+              agentId: candidateAgentId,
+              connectionType: 'websocket',
+              ...sessionHandlers,
+            }),
+            20000,
+          );
+
+          if (attemptId !== callAttemptSeq) {
+            try {
+              await startedSession.endSession();
+            } catch {
+              // ignore late cleanup errors
+            }
+            throw new Error('Call was superseded by a newer attempt.');
+          }
+
+          conversation = startedSession;
+          AGENT_ID = candidateAgentId;
+          usedWebSocketFallback = true;
+          lastError = null;
+          break;
+        } catch (sessionErr) {
+          lastError = sessionErr;
+        }
+      }
+    }
+
+    if (!conversation && attemptedWebSocketFallback) {
+      try {
+        const signedUrl = await fetchSignedUrl();
+        const startedSession = await startSessionWithTimeout(
+          Conversation.startSession({
+            signedUrl,
+            connectionType: 'websocket',
+            ...sessionHandlers,
+          }),
+          20000,
+        );
+
+        if (attemptId !== callAttemptSeq) {
+          try {
+            await startedSession.endSession();
+          } catch {
+            // ignore late cleanup errors
+          }
+          throw new Error('Call was superseded by a newer attempt.');
+        }
+
+        conversation = startedSession;
+        usedWebSocketFallback = true;
+        lastError = null;
+      } catch (signedUrlErr) {
+        lastError = signedUrlErr;
+      }
+    }
+
+    if (usedWebSocketFallback) {
+      notifyToast('Voice connection fallback', 'Connected over WebSocket because WebRTC was unavailable.', 'warning');
+    }
+
+    if (lastError && !conversation) {
+      throw lastError;
+    }
   } catch (err) {
     console.error('[VoiceAgent] Failed to start call:', err);
-    const msg = err.name === 'NotAllowedError'
-      ? 'Microphone access denied'
-      : (err.message || 'Connection failed');
+    const msg = mapVoiceStartError(err);
     setCallState('error', msg);
     conversation = null;
   }
 }
 
 async function endCall() {
+  callAttemptSeq += 1;
   if (conversation) {
     try {
       await conversation.endSession();
@@ -239,6 +513,7 @@ function buildClientTools() {
       });
       const data = await res.json();
       logTool(icon, endpoint, data, 'done');
+      syncCaseContextFromToolResult(endpoint, data);
       notifyToolOutcome(endpoint, data);
       return JSON.stringify(data);
     } catch (err) {
@@ -260,7 +535,8 @@ function buildClientTools() {
     rescheduleAppointment:   restTool('rescheduleAppointment', '🔄'),
 
     // Tool 9: In-UI Upload
-    requestUpload: handleUploadRequest,
+    requestUpload: (params) => handleUploadRequest(params, 'requestUpload'),
+    sendUploadLink: (params) => handleUploadRequest(params, 'sendUploadLink'),
   };
 }
 
@@ -268,7 +544,43 @@ function buildClientTools() {
 //  3. UPLOAD MODAL HANDLER (Tool 9)
 // ================================================================
 
-async function handleUploadRequest(params) {
+function syncUploadPanels(uploadType, data, apiBase) {
+  if (!data || typeof data !== 'object' || data.error) return;
+
+  if (uploadType === 'skin_image') {
+    if (typeof window.setStatus === 'function') {
+      window.setStatus($('skinStatus'), 'Skin upload completed.', true);
+    }
+    if (typeof window.renderSkinResult === 'function') {
+      window.renderSkinResult(data, apiBase);
+    }
+    notifyToast('Skin submitted', 'The skin photo was uploaded in this web session.', 'success');
+    return;
+  }
+
+  if (typeof window.setStatus === 'function') {
+    window.setStatus($('docStatus'), 'Document upload completed.', true);
+  }
+  if (typeof window.renderDocumentResult === 'function') {
+    window.renderDocumentResult(data);
+  }
+  notifyToast('Document submitted', 'The document was uploaded in this web session.', 'success');
+}
+
+function syncUploadFailure(uploadType, message) {
+  if (uploadType === 'skin_image') {
+    if (typeof window.setStatus === 'function') {
+      window.setStatus($('skinStatus'), message, false);
+    }
+    return;
+  }
+
+  if (typeof window.setStatus === 'function') {
+    window.setStatus($('docStatus'), message, false);
+  }
+}
+
+async function handleUploadRequest(params, toolName = 'requestUpload') {
   const upload_type = normalizeUploadType(params?.upload_type); // "skin_image" | "lab_report" | "prescription"
   const API = getApiBase();
   const patientId = $('patientId')?.value?.trim() || '';
@@ -277,10 +589,14 @@ async function handleUploadRequest(params) {
   const isSkin = upload_type === 'skin_image';
   const displayName = isSkin ? 'Skin Image' : upload_type.replace(/_/g, ' ');
 
-  logTool('📸', 'requestUpload', { upload_type }, 'pending');
+  logTool('📸', toolName, { upload_type }, 'pending');
 
   const result = await new Promise((resolve) => {
     const modal = $('upload-modal');
+    if (!modal) {
+      resolve(JSON.stringify({ error: 'Upload modal is unavailable in this page.' }));
+      return;
+    }
 
     // ── Build modal HTML ──
     modal.innerHTML = `
@@ -369,12 +685,17 @@ async function handleUploadRequest(params) {
 
       try {
         const res = await fetch(endpoint, { method: 'POST', headers, body: form });
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(data.error || data.detail || `Upload failed (${res.status})`);
+        }
+
+        syncUploadPanels(upload_type, data, API);
 
         // Success state
         progressFill.classList.remove('indeterminate');
         progressFill.style.width = '100%';
-        progressText.textContent = '✓ Upload complete!';
+        progressText.textContent = '✓ Upload complete! Results updated on the page.';
         progressText.classList.add('success');
 
         // Auto-close
@@ -385,6 +706,7 @@ async function handleUploadRequest(params) {
 
         resolve(JSON.stringify(data));
       } catch (err) {
+        syncUploadFailure(upload_type, err.message || 'Upload failed');
         progressFill.classList.remove('indeterminate');
         progressText.textContent = '✗ Upload failed — ' + (err.message || 'Unknown error');
         progressText.classList.add('error');
@@ -399,7 +721,7 @@ async function handleUploadRequest(params) {
     };
   });
 
-  logTool('📸', 'requestUpload', JSON.parse(result), 'done');
+  logTool('📸', toolName, JSON.parse(result), 'done');
   return result;
 }
 
@@ -652,6 +974,10 @@ function togglePanel() {
   } else {
     panel.classList.remove('hidden');
     widget.setAttribute('data-state', 'expanded');
+    // Lazy-load config only when the user opens the voice UI.
+    if (AGENT_ID === DEFAULT_AGENT_ID && !agentConfigPromise) {
+      ensureAgentId().catch(() => {});
+    }
   }
 
   syncVoiceBackdrop();
@@ -688,6 +1014,9 @@ function toggleMute() {
 // ================================================================
 
 function init() {
+  if (voiceUiInitialized) return;
+  voiceUiInitialized = true;
+
   const fab = $('phone-fab');
   const callBtn = $('btn-call');
   const endBtn = $('btn-end');
@@ -726,12 +1055,6 @@ function init() {
   }
 
   console.log('[VoiceAgent] Phone UI initialized');
-  ensureAgentId().then((loadedAgentId) => {
-    if (loadedAgentId === DEFAULT_AGENT_ID) {
-      console.warn('[VoiceAgent] Missing ELEVENLABS_AGENT_ID. Set it in .env and restart backend.');
-    }
-  });
-
   syncVoiceBackdrop();
 }
 

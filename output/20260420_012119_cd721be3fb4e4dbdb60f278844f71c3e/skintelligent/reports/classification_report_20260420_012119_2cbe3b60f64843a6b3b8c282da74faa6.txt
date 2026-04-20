@@ -1,0 +1,356 @@
+SKIN_TELLIGENT Classification Report
+========================================
+
+[
+  {
+    "class_name": "Exanthems_And_Drug_Eruptions",
+    "confidence": 0.7898867726325989,
+    "class_idx": 9,
+    "top_3_predictions": [
+      {
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.7898867726325989,
+        "class_idx": 9
+      },
+      {
+        "class_name": "Rashes",
+        "confidence": 0.18894974887371063,
+        "class_idx": 21
+      },
+      {
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.017050590366125107,
+        "class_idx": 3
+      }
+    ],
+    "roi_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_0.jpg",
+    "detection_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_0.jpg",
+    "roi_index": 0,
+    "det_confidence": 0.9144691824913025,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.7898867726325989,
+        "class_idx": 9,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_0_top1_class9.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Rashes",
+        "confidence": 0.18894974887371063,
+        "class_idx": 21,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_0_top2_class21.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.017050590366125107,
+        "class_idx": 3,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_0_top3_class3.jpg"
+      }
+    ],
+    "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_0_top1_class9.jpg"
+  },
+  {
+    "class_name": "Exanthems_And_Drug_Eruptions",
+    "confidence": 0.9820952415466309,
+    "class_idx": 9,
+    "top_3_predictions": [
+      {
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.9820952415466309,
+        "class_idx": 9
+      },
+      {
+        "class_name": "Rashes",
+        "confidence": 0.015151910483837128,
+        "class_idx": 21
+      },
+      {
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.0019589036237448454,
+        "class_idx": 3
+      }
+    ],
+    "roi_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_1.jpg",
+    "detection_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_1.jpg",
+    "roi_index": 1,
+    "det_confidence": 0.8539396524429321,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.9820952415466309,
+        "class_idx": 9,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_1_top1_class9.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Rashes",
+        "confidence": 0.015151910483837128,
+        "class_idx": 21,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_1_top2_class21.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.0019589036237448454,
+        "class_idx": 3,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_1_top3_class3.jpg"
+      }
+    ],
+    "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_1_top1_class9.jpg"
+  },
+  {
+    "class_name": "Bullous_Disease_Photos",
+    "confidence": 0.9529179334640503,
+    "class_idx": 3,
+    "top_3_predictions": [
+      {
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.9529179334640503,
+        "class_idx": 3
+      },
+      {
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.0409713014960289,
+        "class_idx": 9
+      },
+      {
+        "class_name": "Rashes",
+        "confidence": 0.005383934359997511,
+        "class_idx": 21
+      }
+    ],
+    "roi_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_2.jpg",
+    "detection_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_2.jpg",
+    "roi_index": 2,
+    "det_confidence": 0.8406057953834534,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.9529179334640503,
+        "class_idx": 3,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_2_top1_class3.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.0409713014960289,
+        "class_idx": 9,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_2_top2_class9.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Rashes",
+        "confidence": 0.005383934359997511,
+        "class_idx": 21,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_2_top3_class21.jpg"
+      }
+    ],
+    "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_2_top1_class3.jpg"
+  },
+  {
+    "class_name": "Exanthems_And_Drug_Eruptions",
+    "confidence": 0.41828885674476624,
+    "class_idx": 9,
+    "top_3_predictions": [
+      {
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.41828885674476624,
+        "class_idx": 9
+      },
+      {
+        "class_name": "Rashes",
+        "confidence": 0.3784744143486023,
+        "class_idx": 21
+      },
+      {
+        "class_name": "Actinic keratosis",
+        "confidence": 0.05634031072258949,
+        "class_idx": 1
+      }
+    ],
+    "roi_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_3.jpg",
+    "detection_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_3.jpg",
+    "roi_index": 3,
+    "warning": "Low confidence prediction",
+    "det_confidence": 0.7798587083816528,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.41828885674476624,
+        "class_idx": 9,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_3_top1_class9.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Rashes",
+        "confidence": 0.3784744143486023,
+        "class_idx": 21,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_3_top2_class21.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Actinic keratosis",
+        "confidence": 0.05634031072258949,
+        "class_idx": 1,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_3_top3_class1.jpg"
+      }
+    ],
+    "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_3_top1_class9.jpg"
+  },
+  {
+    "class_name": "Other diseases",
+    "confidence": 0.8556051850318909,
+    "class_idx": 17,
+    "top_3_predictions": [
+      {
+        "class_name": "Other diseases",
+        "confidence": 0.8556051850318909,
+        "class_idx": 17
+      },
+      {
+        "class_name": "Warts",
+        "confidence": 0.03988758474588394,
+        "class_idx": 26
+      },
+      {
+        "class_name": "Actinic keratosis",
+        "confidence": 0.030274497345089912,
+        "class_idx": 1
+      }
+    ],
+    "roi_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_4.jpg",
+    "detection_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_4.jpg",
+    "roi_index": 4,
+    "det_confidence": 0.6490074992179871,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Other diseases",
+        "confidence": 0.8556051850318909,
+        "class_idx": 17,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_4_top1_class17.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Warts",
+        "confidence": 0.03988758474588394,
+        "class_idx": 26,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_4_top2_class26.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Actinic keratosis",
+        "confidence": 0.030274497345089912,
+        "class_idx": 1,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_4_top3_class1.jpg"
+      }
+    ],
+    "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_4_top1_class17.jpg"
+  },
+  {
+    "class_name": "Exanthems_And_Drug_Eruptions",
+    "confidence": 0.7780077457427979,
+    "class_idx": 9,
+    "top_3_predictions": [
+      {
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.7780077457427979,
+        "class_idx": 9
+      },
+      {
+        "class_name": "Actinic keratosis",
+        "confidence": 0.12474425137042999,
+        "class_idx": 1
+      },
+      {
+        "class_name": "Rashes",
+        "confidence": 0.043332789093256,
+        "class_idx": 21
+      }
+    ],
+    "roi_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_5.jpg",
+    "detection_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_5.jpg",
+    "roi_index": 5,
+    "det_confidence": 0.6304590106010437,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.7780077457427979,
+        "class_idx": 9,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_5_top1_class9.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Actinic keratosis",
+        "confidence": 0.12474425137042999,
+        "class_idx": 1,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_5_top2_class1.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Rashes",
+        "confidence": 0.043332789093256,
+        "class_idx": 21,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_5_top3_class21.jpg"
+      }
+    ],
+    "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_5_top1_class9.jpg"
+  },
+  {
+    "class_name": "Exanthems_And_Drug_Eruptions",
+    "confidence": 0.7023289203643799,
+    "class_idx": 9,
+    "top_3_predictions": [
+      {
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.7023289203643799,
+        "class_idx": 9
+      },
+      {
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.17658819258213043,
+        "class_idx": 3
+      },
+      {
+        "class_name": "Rashes",
+        "confidence": 0.051479604095220566,
+        "class_idx": 21
+      }
+    ],
+    "roi_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_6.jpg",
+    "detection_image": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/detections/detection_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_6.jpg",
+    "roi_index": 6,
+    "det_confidence": 0.6002473831176758,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.7023289203643799,
+        "class_idx": 9,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_6_top1_class9.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.17658819258213043,
+        "class_idx": 3,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_6_top2_class3.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Rashes",
+        "confidence": 0.051479604095220566,
+        "class_idx": 21,
+        "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_6_top3_class21.jpg"
+      }
+    ],
+    "gradcam": "output/20260420_012119_cd721be3fb4e4dbdb60f278844f71c3e/skintelligent/gradcam/gradcam_roi_20260420_012119_2cbe3b60f64843a6b3b8c282da74faa6_6_top1_class9.jpg"
+  }
+]

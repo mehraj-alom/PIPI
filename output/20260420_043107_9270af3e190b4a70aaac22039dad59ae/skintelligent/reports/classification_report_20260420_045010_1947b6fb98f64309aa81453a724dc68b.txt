@@ -1,0 +1,56 @@
+SKIN_TELLIGENT Classification Report
+========================================
+
+[
+  {
+    "class_name": "Dermatitis",
+    "confidence": 0.39453601837158203,
+    "class_idx": 5,
+    "top_3_predictions": [
+      {
+        "class_name": "Dermatitis",
+        "confidence": 0.39453601837158203,
+        "class_idx": 5
+      },
+      {
+        "class_name": "Herpes",
+        "confidence": 0.32752525806427,
+        "class_idx": 11
+      },
+      {
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.1884414404630661,
+        "class_idx": 3
+      }
+    ],
+    "roi_image": "output/20260420_043107_9270af3e190b4a70aaac22039dad59ae/skintelligent/detections/detection_20260420_045010_1947b6fb98f64309aa81453a724dc68b_0.jpg",
+    "detection_image": "output/20260420_043107_9270af3e190b4a70aaac22039dad59ae/skintelligent/detections/detection_20260420_045010_1947b6fb98f64309aa81453a724dc68b_0.jpg",
+    "roi_index": 0,
+    "warning": "Low confidence prediction",
+    "det_confidence": 0.820254385471344,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Dermatitis",
+        "confidence": 0.39453601837158203,
+        "class_idx": 5,
+        "gradcam": "output/20260420_043107_9270af3e190b4a70aaac22039dad59ae/skintelligent/gradcam/gradcam_roi_20260420_045010_1947b6fb98f64309aa81453a724dc68b_0_top1_class5.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Herpes",
+        "confidence": 0.32752525806427,
+        "class_idx": 11,
+        "gradcam": "output/20260420_043107_9270af3e190b4a70aaac22039dad59ae/skintelligent/gradcam/gradcam_roi_20260420_045010_1947b6fb98f64309aa81453a724dc68b_0_top2_class11.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.1884414404630661,
+        "class_idx": 3,
+        "gradcam": "output/20260420_043107_9270af3e190b4a70aaac22039dad59ae/skintelligent/gradcam/gradcam_roi_20260420_045010_1947b6fb98f64309aa81453a724dc68b_0_top3_class3.jpg"
+      }
+    ],
+    "gradcam": "output/20260420_043107_9270af3e190b4a70aaac22039dad59ae/skintelligent/gradcam/gradcam_roi_20260420_045010_1947b6fb98f64309aa81453a724dc68b_0_top1_class5.jpg"
+  }
+]

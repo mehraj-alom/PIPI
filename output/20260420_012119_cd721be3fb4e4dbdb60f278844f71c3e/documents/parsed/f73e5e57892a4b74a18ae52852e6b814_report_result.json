@@ -1,0 +1,38 @@
+{
+  "markdown": "<!-- image -->\n\n<!-- image -->\n\n## SMART PATHOLOGY LAB\n\nAccurate | Caring ] Instant\n\n105-108,SMARTVISIONCOMPLEX,HEALTHCAREROAD,OPPOSITEHEALTHCARECOMPLEX.MUMBAI-689578\n\n## Yash M. Patel\n\nAge: 21 Years\n\nSex : Male\n\nPID:555\n\n<!-- image -->\n\n<!-- image -->\n\nRegistered on: 02:31 PM 02 Dec, 22\n\nCollected on: 03:11 PM 02 Dec, 22\n\nReported on: 04:35 PM 02 Dec,22\n\n## Sample Collected At:\n\n125, Shivam Bungalow, S G Road, Mumbai\n\nRef. By: Dr. Hiren Shah\n\n## HISTOPATHOLOGY - GASTROINTESTINAL BIOPSY\n\nCLINICALNOTE:NAUSEAANDPAIN\n\n## GROSSDESCRIPTION\n\n- A. Received in formalin in a container labeled with the patient's name and\"cecal polyp (snare)\" is a single tan soft tissue fragment measuring 0.2 x 0.1 x 0.1 cm.,The.specimen is entirely submitted between sponges in cassette A.\n2. two tan soft tissue fragments measuring 1.2 x 0.8'x 0:55 cm and 0.9 x 0.6 x 0.5 cm. The largest piece is inked 1 black, trisected and entirely submitted between sponges:in:cassette B1. The second piece is inked black, trisected and entirely submitted between sponges,in cassette B2?\n\n<!-- image -->\n\n## IMPRESSION\n\n- A.COLON,CECALPOLYP,SNARE:TUBULARADENOMA\n- B.COLON,SIGMOIDPOLYPAT30.CM,SNARE:\n- Shoo r?..\n- Drlogy.com CORRELATION RECOMMENDED).\n- C.COLON,SIGMOIDPOLYPAT25CM,SNARE:SESSILESERRATEDADENOMAWITHLOW-GRADEDYSPLASIA. NOTE:C.MULTIPLELEVELSWEREEXAMINED.THEPOLYPISASESSILESERRATEDADENOMAWITHLOW GRADEDYSPLASIA.\n\n<!-- image -->\n\n<!-- image -->\n\n<!-- image -->\n\n<!-- image -->\n\n<!-- image -->\n\n<!-- image -->\n\nThanksforReference\n\n****End of Report****\n\nSotetst\n\nMedical Lab Technician (DMLT, BMLT)\n\nDr. Payal Shah (MD, Pathologist)\n\nDr. Vimal Shah (MD, Pathologist)\n\nGeneratedon:02Dec,202205:00PM\n\nPage 1 of 1\n\nSample Collection\n\n<!-- image -->\n\n<!-- image -->",
+  "chunks": [],
+  "medical_fields": {
+    "patient_name": "Yash M. Patel",
+    "age": 21,
+    "gender": "Male",
+    "date_of_birth": null,
+    "visit_date": "2022-12-02",
+    "report_type": "lab_report",
+    "hospital_or_clinic": "SMART PATHOLOGY LAB",
+    "doctor_name": "Dr. Hiren Shah",
+    "diagnosis": [
+      "Tubular adenoma",
+      "Sessile serrated adenoma with low-grade dysplasia"
+    ],
+    "symptoms": [
+      "Nausea",
+      "Pain"
+    ],
+    "medical_history": [],
+    "allergies": [],
+    "medications": [],
+    "lab_tests": [],
+    "vital_signs": {
+      "blood_pressure": null,
+      "heart_rate": null,
+      "temperature": null,
+      "respiratory_rate": null,
+      "oxygen_saturation": null
+    },
+    "procedures": [
+      "Gastrointestinal biopsy"
+    ],
+    "summary": "21-year-old male presented with nausea and pain; histopathological examination of colonic polyps revealed tubular adenoma in cecal polyp and sessile serrated adenoma with low-grade dysplasia in sigmoid colon. No further labs or vitals reported.",
+    "confidence": 0.85
+  }
+}

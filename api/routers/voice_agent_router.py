@@ -1,16 +1,19 @@
+import re
 from datetime import datetime
+
+import httpx
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
-from typing import Optional
 
 from backend.database.connections import SessionLocal
 from backend.database.queries import (
     get_patient_by_phone,
     get_patient_by_name_exact,
+    get_patient_name_suggestions,
     upsert_patient,
     get_available_doctors,
     get_available_slots_for_doctor_date,
     create_appointment,
+    get_patient_appointment_for_slot,
     get_appointments_for_patient,
     cancel_appointment,
     reschedule_appointment,
@@ -31,13 +34,79 @@ from config.voice_agent_schemas import (
 from config.db_config import settings
 
 router = APIRouter(prefix="/tools/VoiceAgent", tags=["Voice Agent Tools"])
+ELEVENLABS_SIGNED_URL_ENDPOINT = "https://api.elevenlabs.io/v1/convai/conversation/get-signed-url"
+
+
+def _extract_agent_and_branch_ids(raw_agent_reference: str) -> tuple[str, str | None]:
+    raw = str(raw_agent_reference or "").strip().strip('"').strip("'")
+    if not raw:
+        return "", None
+
+    agent_match = re.search(r"agent_[a-z0-9]+", raw, re.IGNORECASE)
+    branch_match = re.search(r"agtbrch_[a-z0-9]+", raw, re.IGNORECASE)
+
+    if agent_match:
+        return agent_match.group(0), branch_match.group(0) if branch_match else None
+
+    agent_id = raw.split("?", 1)[0].strip()
+    return agent_id, branch_match.group(0) if branch_match else None
+
+
+def _build_signed_url_request_config() -> tuple[dict[str, str], dict[str, str]]:
+    agent_id, branch_id = _extract_agent_and_branch_ids(settings.ELEVENLABS_AGENT_ID or "")
+    api_key = (settings.ELEVENLABS_API_KEY or "").strip()
+
+    if not agent_id:
+        raise HTTPException(status_code=503, detail="ELEVENLABS_AGENT_ID is not configured on the backend.")
+
+    if not api_key:
+        raise HTTPException(status_code=503, detail="ELEVENLABS_API_KEY is not configured on the backend.")
+
+    params = {"agent_id": agent_id}
+    if branch_id:
+        params["branch_id"] = branch_id
+
+    headers = {"xi-api-key": api_key}
+    return headers, params
 
 
 @router.get("/config", description="Expose non-sensitive voice agent runtime config for the web UI.")
 def get_voice_agent_config():
     return {
-        "agent_id": settings.ELEVENLABS_AGENT_ID or ""
+        "agent_id": (settings.ELEVENLABS_AGENT_ID or "").strip()
     }
+
+
+@router.get("/signed-url", description="Create a signed ElevenLabs conversation URL for browser WebSocket fallback.")
+def get_voice_agent_signed_url():
+    headers, params = _build_signed_url_request_config()
+
+    try:
+        response = httpx.get(
+            ELEVENLABS_SIGNED_URL_ENDPOINT,
+            params=params,
+            headers=headers,
+            timeout=10.0,
+        )
+        response.raise_for_status()
+    except httpx.HTTPStatusError as exc:
+        status_code = exc.response.status_code if exc.response is not None else 502
+        raise HTTPException(
+            status_code=502,
+            detail=f"ElevenLabs signed URL request failed ({status_code}).",
+        ) from exc
+    except httpx.HTTPError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail="Could not reach ElevenLabs to create a signed URL.",
+        ) from exc
+
+    payload = response.json()
+    signed_url = str(payload.get("signed_url") or "").strip()
+    if not signed_url:
+        raise HTTPException(status_code=502, detail="ElevenLabs response did not include a signed URL.")
+
+    return {"signed_url": signed_url}
 
 def get_db():
     db = SessionLocal()
@@ -53,6 +122,28 @@ def get_patient_details(req: GetPatientDetailsReq, db = Depends(get_db)):
     if not patient:
         patient = get_patient_by_name_exact(db, req.Patient_Name)
     if not patient:
+        suggestions = get_patient_name_suggestions(db, req.Patient_Name)
+        if suggestions:
+            suggested_matches = [
+                {
+                    "name": match.name,
+                    "phone_last4": match.phone[-4:] if match.phone else None,
+                }
+                for match in suggestions
+            ]
+            suggestion_text = ", ".join(
+                f"{match['name']} (phone ending {match['phone_last4']})"
+                if match["phone_last4"]
+                else match["name"]
+                for match in suggested_matches
+            )
+            return {
+                "error": (
+                    "Patient not found. Similar records found: "
+                    f"{suggestion_text}. Please confirm the exact name or phone number."
+                ),
+                "suggested_matches": suggested_matches,
+            }
         return {"error": "Patient not found."}
     return {
         "patient_id": patient.id,
@@ -113,6 +204,21 @@ def book_appointment(req: BookAppointmentReq, db = Depends(get_db)):
     try:
         pid = int(req.patient_id)
         dt = datetime.strptime(req.appointment_date, "%Y-%m-%d").date()
+        existing = get_patient_appointment_for_slot(
+            db,
+            patient_id=pid,
+            doctor_id=req.doctor_id,
+            appointment_date=dt,
+            time_slot=req.time_slot,
+        )
+        if existing is not None:
+            return {
+                "success": True,
+                "appointment_id": existing.id,
+                "status": getattr(existing.status, "value", existing.status),
+                "already_booked": True,
+            }
+
         appointment = create_appointment(
             db,
             patient_id=pid,
@@ -120,7 +226,12 @@ def book_appointment(req: BookAppointmentReq, db = Depends(get_db)):
             appointment_date=dt,
             time_slot=req.time_slot
         )
-        return {"success": True, "appointment_id": appointment.id, "status": "CONFIRMED"}
+        return {
+            "success": True,
+            "appointment_id": appointment.id,
+            "status": getattr(appointment.status, "value", appointment.status),
+            "already_booked": False,
+        }
     except AppointmentConflictError:
         return {"error": "The selected time slot is no longer available."}
     except Exception as e:

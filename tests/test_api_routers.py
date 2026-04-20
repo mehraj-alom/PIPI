@@ -96,6 +96,31 @@ def test_get_patient_details_falls_back_to_name(monkeypatch):
     assert resp.json()["name"] == "John Doe"
 
 
+def test_get_patient_details_returns_close_name_suggestions(monkeypatch):
+    monkeypatch.setattr(voice_agent_router, "get_patient_by_phone", lambda db, phone: None)
+    monkeypatch.setattr(voice_agent_router, "get_patient_by_name_exact", lambda db, name: None)
+    monkeypatch.setattr(
+        voice_agent_router,
+        "get_patient_name_suggestions",
+        lambda db, name: [SimpleNamespace(name="Mehraj Alom", phone="3647849434")],
+    )
+
+    app = _build_voice_app()
+    app.dependency_overrides[voice_agent_router.get_db] = lambda: iter([object()])
+
+    client = TestClient(app)
+    resp = client.post(
+        "/tools/VoiceAgent/getPatientDetails",
+        json={"Patient_Name": "Mehraj Alam", "patient_phone": ""},
+    )
+
+    assert resp.status_code == 200
+    assert "Similar records found" in resp.json()["error"]
+    assert resp.json()["suggested_matches"] == [
+        {"name": "Mehraj Alom", "phone_last4": "9434"},
+    ]
+
+
 def test_register_patient_splits_conditions(monkeypatch):
     captured = {}
 
@@ -160,3 +185,86 @@ def test_book_appointment_conflict(monkeypatch):
 
     assert resp.status_code == 200
     assert "no longer available" in resp.json()["error"]
+
+
+def test_book_appointment_returns_existing_for_duplicate_request(monkeypatch):
+    monkeypatch.setattr(
+        voice_agent_router,
+        "get_patient_appointment_for_slot",
+        lambda *args, **kwargs: SimpleNamespace(id=7, status="confirmed"),
+    )
+
+    def _unexpected_create(*args, **kwargs):
+        raise AssertionError("create_appointment should not be called when the appointment already exists")
+
+    monkeypatch.setattr(voice_agent_router, "create_appointment", _unexpected_create)
+
+    app = _build_voice_app()
+    app.dependency_overrides[voice_agent_router.get_db] = lambda: iter([object()])
+    client = TestClient(app)
+
+    resp = client.post(
+        "/tools/VoiceAgent/bookAppointment",
+        json={
+            "doctor_id": 1,
+            "patient_id": "2",
+            "appointment_date": "2026-04-20",
+            "time_slot": "10:00",
+        },
+    )
+
+    assert resp.status_code == 200
+    assert resp.json() == {
+        "success": True,
+        "appointment_id": 7,
+        "status": "confirmed",
+        "already_booked": True,
+    }
+
+
+def test_voice_signed_url_uses_backend_agent_config(monkeypatch):
+    captured = {}
+
+    class FakeResponse:
+        status_code = 200
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {"signed_url": "wss://signed.example.test/session"}
+
+    def _fake_get(url, *, params=None, headers=None, timeout=None):
+        captured["url"] = url
+        captured["params"] = params
+        captured["headers"] = headers
+        captured["timeout"] = timeout
+        return FakeResponse()
+
+    monkeypatch.setattr(voice_agent_router.settings, "ELEVENLABS_AGENT_ID", '"agent_ab12cd34?branchId=agtbrch_ef56gh78"')
+    monkeypatch.setattr(voice_agent_router.settings, "ELEVENLABS_API_KEY", "secret-key")
+    monkeypatch.setattr(voice_agent_router.httpx, "get", _fake_get)
+
+    client = TestClient(_build_voice_app())
+    resp = client.get("/tools/VoiceAgent/signed-url")
+
+    assert resp.status_code == 200
+    assert resp.json()["signed_url"] == "wss://signed.example.test/session"
+    assert captured["url"] == voice_agent_router.ELEVENLABS_SIGNED_URL_ENDPOINT
+    assert captured["params"] == {
+        "agent_id": "agent_ab12cd34",
+        "branch_id": "agtbrch_ef56gh78",
+    }
+    assert captured["headers"] == {"xi-api-key": "secret-key"}
+    assert captured["timeout"] == 10.0
+
+
+def test_voice_signed_url_requires_backend_api_key(monkeypatch):
+    monkeypatch.setattr(voice_agent_router.settings, "ELEVENLABS_AGENT_ID", "agent_ab12cd34")
+    monkeypatch.setattr(voice_agent_router.settings, "ELEVENLABS_API_KEY", "")
+
+    client = TestClient(_build_voice_app())
+    resp = client.get("/tools/VoiceAgent/signed-url")
+
+    assert resp.status_code == 503
+    assert "ELEVENLABS_API_KEY" in resp.json()["detail"]

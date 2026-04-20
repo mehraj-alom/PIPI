@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from difflib import SequenceMatcher
 from datetime import date, datetime, time, timedelta
 from typing import Iterable
 
@@ -13,6 +14,8 @@ from .models import Appointment, AppointmentStatus, CallSession, Doctor, Patient
 
 DEFAULT_SLOT_DURATION_MINUTES = 30
 EVENING_START_HOUR = 16
+DEFAULT_PATIENT_NAME_SUGGESTION_LIMIT = 3
+PATIENT_NAME_SUGGESTION_MIN_SCORE = 0.82
 
 
 class DatabaseOperationError(RuntimeError):
@@ -43,6 +46,20 @@ def normalize_phone(phone: str | None) -> str:
 
 def normalize_name(name: str | None) -> str:
     return " ".join((name or "").strip().split())
+
+
+def patient_name_similarity(left: str | None, right: str | None) -> float:
+    left_normalized = normalize_name(left).casefold()
+    right_normalized = normalize_name(right).casefold()
+    if not left_normalized or not right_normalized:
+        return 0.0
+
+    collapsed_left = left_normalized.replace(" ", "")
+    collapsed_right = right_normalized.replace(" ", "")
+    return max(
+        SequenceMatcher(None, left_normalized, right_normalized).ratio(),
+        SequenceMatcher(None, collapsed_left, collapsed_right).ratio(),
+    )
 
 
 def parse_time_slot(value: str) -> time:
@@ -107,6 +124,29 @@ def appointment_exists(session: Session, doctor_id: int, appointment_date: date,
     )
 
 
+def get_patient_appointment_for_slot(
+    session: Session,
+    *,
+    patient_id: int,
+    doctor_id: int,
+    appointment_date: date,
+    time_slot: str,
+) -> Appointment | None:
+    slot_label = format_time_slot(parse_time_slot(time_slot))
+    return (
+        session.query(Appointment)
+        .filter(
+            Appointment.patient_id == patient_id,
+            Appointment.doctor_id == doctor_id,
+            Appointment.date == appointment_date,
+            Appointment.time_slot == slot_label,
+            Appointment.status != AppointmentStatus.CANCELLED,
+        )
+        .order_by(desc(Appointment.id))
+        .first()
+    )
+
+
 def get_patient_by_phone(session: Session, phone: str) -> Patient | None:
     normalized_phone = normalize_phone(phone)
     if not normalized_phone:
@@ -123,6 +163,28 @@ def get_patient_by_name_exact(session: Session, name: str) -> Patient | None:
     if not normalized_name:
         return None
     return session.query(Patient).filter(Patient.name.ilike(normalized_name)).first()
+
+
+def get_patient_name_suggestions(
+    session: Session,
+    name: str,
+    *,
+    limit: int = DEFAULT_PATIENT_NAME_SUGGESTION_LIMIT,
+    min_score: float = PATIENT_NAME_SUGGESTION_MIN_SCORE,
+) -> list[Patient]:
+    normalized_name = normalize_name(name)
+    if not normalized_name:
+        return []
+
+    scored_matches: list[tuple[float, Patient]] = []
+    patients = session.query(Patient).order_by(asc(Patient.name), asc(Patient.id)).all()
+    for patient in patients:
+        score = patient_name_similarity(normalized_name, patient.name)
+        if score >= min_score:
+            scored_matches.append((score, patient))
+
+    scored_matches.sort(key=lambda item: (-item[0], item[1].name.casefold(), item[1].id))
+    return [patient for _, patient in scored_matches[: max(limit, 1)]]
 
 
 def get_call_session_by_session_id(session: Session, session_id: str) -> CallSession | None:
@@ -378,6 +440,16 @@ def create_appointment(
         raise ValueError(f"Patient {patient_id} was not found")
 
     slot_label = format_time_slot(parse_time_slot(time_slot))
+    existing = get_patient_appointment_for_slot(
+        session,
+        patient_id=patient_id,
+        doctor_id=doctor_id,
+        appointment_date=appointment_date,
+        time_slot=slot_label,
+    )
+    if existing is not None:
+        return existing
+
     if not validate_slot_for_doctor(session, doctor_id, appointment_date, slot_label):
         raise AppointmentConflictError("The selected slot is no longer available")
 
@@ -397,6 +469,15 @@ def create_appointment(
         return appointment
     except IntegrityError as exc:
         session.rollback()
+        existing = get_patient_appointment_for_slot(
+            session,
+            patient_id=patient_id,
+            doctor_id=doctor_id,
+            appointment_date=appointment_date,
+            time_slot=slot_label,
+        )
+        if existing is not None:
+            return existing
         logger.exception(
             "Appointment conflict for patient_id=%s doctor_id=%s date=%s time_slot=%s",
             patient_id,
@@ -466,10 +547,13 @@ __all__ = [
     "get_available_slots_for_doctor_date",
     "get_doctor_by_id",
     "get_latest_appointment_for_patient",
+    "get_patient_appointment_for_slot",
     "get_patient_by_id",
     "get_patient_by_name_exact",
+    "get_patient_name_suggestions",
     "get_patient_by_phone",
     "list_patients",
+    "patient_name_similarity",
     "reschedule_appointment",
     "upsert_call_session",
     "upsert_patient",

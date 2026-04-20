@@ -1,0 +1,26 @@
+{
+  "patient_name": null,
+  "age": null,
+  "gender": null,
+  "date_of_birth": null,
+  "visit_date": null,
+  "report_type": "lab_report",
+  "hospital_or_clinic": null,
+  "doctor_name": null,
+  "diagnosis": [],
+  "symptoms": [],
+  "medical_history": [],
+  "allergies": [],
+  "medications": [],
+  "lab_tests": [],
+  "vital_signs": {
+    "blood_pressure": null,
+    "heart_rate": null,
+    "temperature": null,
+    "respiratory_rate": null,
+    "oxygen_saturation": null
+  },
+  "procedures": [],
+  "summary": "",
+  "confidence": 0.0
+}

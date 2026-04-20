@@ -68,6 +68,10 @@ def _build_voice_app():
     return app
 
 
+def _override_db():
+    yield object()
+
+
 def test_get_patient_details_falls_back_to_name(monkeypatch):
     monkeypatch.setattr(voice_agent_router, "get_patient_by_phone", lambda db, phone: None)
     monkeypatch.setattr(
@@ -84,7 +88,7 @@ def test_get_patient_details_falls_back_to_name(monkeypatch):
     )
 
     app = _build_voice_app()
-    app.dependency_overrides[voice_agent_router.get_db] = lambda: iter([object()])
+    app.dependency_overrides[voice_agent_router.get_db] = _override_db
 
     client = TestClient(app)
     resp = client.post(
@@ -106,7 +110,7 @@ def test_get_patient_details_returns_close_name_suggestions(monkeypatch):
     )
 
     app = _build_voice_app()
-    app.dependency_overrides[voice_agent_router.get_db] = lambda: iter([object()])
+    app.dependency_overrides[voice_agent_router.get_db] = _override_db
 
     client = TestClient(app)
     resp = client.post(
@@ -131,7 +135,7 @@ def test_register_patient_splits_conditions(monkeypatch):
     monkeypatch.setattr(voice_agent_router, "upsert_patient", _fake_upsert)
 
     app = _build_voice_app()
-    app.dependency_overrides[voice_agent_router.get_db] = lambda: iter([object()])
+    app.dependency_overrides[voice_agent_router.get_db] = _override_db
     client = TestClient(app)
 
     resp = client.post(
@@ -151,7 +155,7 @@ def test_register_patient_splits_conditions(monkeypatch):
 
 def test_check_doctor_availability_invalid_date_returns_error():
     app = _build_voice_app()
-    app.dependency_overrides[voice_agent_router.get_db] = lambda: iter([object()])
+    app.dependency_overrides[voice_agent_router.get_db] = _override_db
     client = TestClient(app)
 
     resp = client.post(
@@ -164,13 +168,19 @@ def test_check_doctor_availability_invalid_date_returns_error():
 
 
 def test_book_appointment_conflict(monkeypatch):
+    monkeypatch.setattr(
+        voice_agent_router,
+        "get_patient_appointment_for_slot",
+        lambda *args, **kwargs: None,
+    )
+
     def _raise_conflict(*args, **kwargs):
         raise voice_agent_router.AppointmentConflictError("conflict")
 
     monkeypatch.setattr(voice_agent_router, "create_appointment", _raise_conflict)
 
     app = _build_voice_app()
-    app.dependency_overrides[voice_agent_router.get_db] = lambda: iter([object()])
+    app.dependency_overrides[voice_agent_router.get_db] = _override_db
     client = TestClient(app)
 
     resp = client.post(
@@ -200,7 +210,7 @@ def test_book_appointment_returns_existing_for_duplicate_request(monkeypatch):
     monkeypatch.setattr(voice_agent_router, "create_appointment", _unexpected_create)
 
     app = _build_voice_app()
-    app.dependency_overrides[voice_agent_router.get_db] = lambda: iter([object()])
+    app.dependency_overrides[voice_agent_router.get_db] = _override_db
     client = TestClient(app)
 
     resp = client.post(

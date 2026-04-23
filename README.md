@@ -7,7 +7,7 @@
   <a href="https://fastapi.tiangolo.com/"><img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white"></a>
   <a href="https://pytorch.org/"><img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-Vision-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white"></a>
   <a href="https://www.docker.com/"><img alt="Docker" src="https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white"></a>
-  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-F7DF1E?style=for-the-badge"></a>
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache_2.0-F7DF1E?style=for-the-badge"></a>
 </p>
 
 PIPI is an AI-powered medical upload and care-navigation system built on FastAPI. In this repo, skin-image analysis, document extraction, voice-assisted scheduling, and backend doctor handoff are brought into one case-based workflow instead of being handled as separate tools.

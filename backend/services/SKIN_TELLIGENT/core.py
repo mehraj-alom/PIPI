@@ -83,6 +83,10 @@ class Detector:
 
             file_path = str(file_path)
 
+            if not os.path.exists(file_path):
+                logger.warning(f"Detector model not found at {file_path}; detector will be disabled.")
+                return None
+
             detector_model = cv2.dnn.readNetFromONNX(file_path)
 
             detector_model.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
@@ -93,9 +97,12 @@ class Detector:
 
         except Exception as e:
 
-            logger.error(f"Error loading model from {file_path}: {e}")
-
-            raise e
+            logger.warning(
+                f"Detector model at {file_path} could not be loaded as ONNX; "
+                "falling back to classification-only inference."
+            )
+            logger.debug(f"Detector load failure details: {e}")
+            return None
 
 
     def prepare_image(self, image: np.ndarray):
@@ -194,6 +201,10 @@ class Detector:
             filtered_boxes, filtered_confidences,
             filtered_classes, x_factor, y_factor
         """
+
+        if self.model is None:
+            logger.warning("Detector is unavailable; skipping detection and using full-image classification fallback.")
+            return [], [], [], 1.0, 1.0
 
         logger.info("Starting detection process..")
 

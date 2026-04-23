@@ -1,0 +1,20 @@
+{
+  "patient_name": "Mehraj Alom Tapadar",
+  "date_of_birth": null,
+  "visit_date": "10.12.25",
+  "diagnosis": [
+    "Yellow-brown discoloration",
+    "Subungual hyperkeratosis",
+    "Distal onycholysis",
+    "Nail bed separation"
+  ],
+  "medications": [
+    "Tab. Terbin-AF (Terbinafine 250mg) Dose: 1 tablet once daily.",
+    "Soln. Amorolf-Oliq (Amorolfine 5% Nail Lacquer) App: Apply once weekly to affected nails."
+  ],
+  "lab_values": [],
+  "doctor_name": "Dr. Arshad Khan",
+  "referred_specialist": null,
+  "follow_up_date": null,
+  "summary": "Patient presents with affected nails (great toenail & other toes) showing yellow-brown discoloration, subungual hyperkeratosis, distal onycholysis, and nail bed separation. Treatment includes Tab. Terbin-AF (Terbinafine 250mg) 1 tablet once daily for 12 weeks, and Soln. Amorolf-Oliq (Amorolfine 5% Nail Lacquer) applied once weekly to affected nails after filing."
+}

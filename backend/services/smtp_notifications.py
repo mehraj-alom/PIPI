@@ -11,6 +11,9 @@ from backend.database.models import Doctor, Patient
 from config.db_config import settings
 from logger import Database_logger as logger
 
+LARGE_EMAIL_THRESHOLD_BYTES = 5 * 1024 * 1024
+LARGE_EMAIL_MIN_TIMEOUT_SECONDS = 60.0
+
 
 @dataclass(slots=True)
 class NotificationResult:
@@ -109,6 +112,44 @@ def _attach_file(message: EmailMessage, path: Path) -> bool:
     return True
 
 
+def _calculate_attachment_bytes(paths: list[Path]) -> int:
+    total_bytes = 0
+    for path in paths:
+        try:
+            if path.exists() and path.is_file():
+                total_bytes += path.stat().st_size
+        except OSError:
+            logger.exception("Failed to stat %s while preparing appointment email", path)
+    return total_bytes
+
+
+def _effective_smtp_timeout_seconds(total_attachment_bytes: int) -> float:
+    base_timeout = max(float(settings.SMTP_TIMEOUT_SECONDS or 10.0), 1.0)
+    if total_attachment_bytes >= LARGE_EMAIL_THRESHOLD_BYTES:
+        return max(base_timeout, LARGE_EMAIL_MIN_TIMEOUT_SECONDS)
+    return base_timeout
+
+
+def _format_smtp_error(
+    exc: Exception,
+    *,
+    attached_count: int,
+    total_attachment_bytes: int,
+    timeout_seconds: float,
+) -> str:
+    cause = exc.__cause__ or exc.__context__
+    attachment_mb = total_attachment_bytes / (1024 * 1024) if total_attachment_bytes else 0.0
+
+    if isinstance(exc, TimeoutError) or isinstance(cause, TimeoutError):
+        return (
+            "SMTP send timed out while uploading "
+            f"{attached_count} attachment(s) (~{attachment_mb:.1f} MB before email encoding). "
+            f"Current timeout: {timeout_seconds:.0f}s."
+        )
+
+    return str(exc)
+
+
 def send_doctor_appointment_email(
     *,
     doctor: Doctor,
@@ -158,7 +199,8 @@ def send_doctor_appointment_email(
     smtp_host = (settings.SMTP_HOST or "").strip()
     smtp_username = (settings.SMTP_USERNAME or "").strip()
     smtp_password = settings.SMTP_PASSWORD or ""
-    timeout = max(float(settings.SMTP_TIMEOUT_SECONDS or 10.0), 1.0)
+    total_attachment_bytes = _calculate_attachment_bytes(files_to_attach)
+    timeout = _effective_smtp_timeout_seconds(total_attachment_bytes)
 
     try:
         if settings.SMTP_USE_SSL:
@@ -184,7 +226,12 @@ def send_doctor_appointment_email(
         return NotificationResult(
             sent=False,
             recipient=doctor_email,
-            error=str(exc),
+            error=_format_smtp_error(
+                exc,
+                attached_count=attached_count,
+                total_attachment_bytes=total_attachment_bytes,
+                timeout_seconds=timeout,
+            ),
             attachment_count=attached_count,
         )
 

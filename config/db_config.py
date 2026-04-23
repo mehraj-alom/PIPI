@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     SMTP_FROM_NAME: str | None = Field(default="PIPI Care Navigator")
     SMTP_USE_TLS: bool = Field(default=True)
     SMTP_USE_SSL: bool = Field(default=False)
-    SMTP_TIMEOUT_SECONDS: float = Field(default=10.0)
+    SMTP_TIMEOUT_SECONDS: float = Field(default=150.0)
 
     log_level: str = "INFO"
     allowed_origins: list[str] = ["*"]

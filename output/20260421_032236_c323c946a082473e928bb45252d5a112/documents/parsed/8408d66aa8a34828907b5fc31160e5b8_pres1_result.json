@@ -1,0 +1,137 @@
+{
+  "markdown": "<a id='ab047b84-3828-469b-b231-d5d3ea7045e2'></a>\n\nDr. Arshad Khan (Skin Specialist)\nM.D. (Derm & Venereology)\nSkin, Hair & Nail Specialist\nRegd. No. : MSMC/05/2021\n\n<a id='f04d3238-a727-40b5-8dd7-e4c1fe9f50b8'></a>\n\nClinic : - Andrew's Opticals & Pharmacy\nZarkawt, Near Traffic point\nPhone No. 9612314984 (C)\n6009705259\n\n<a id='2ecedc62-a2b9-4098-9d40-188e4138b648'></a>\n\nRef. No. ... 27 Mehraj Alom Tapadar 21/M Date : ... 10.12.25\n\n<a id='216fb76e-abd3-4cfd-8e3b-e454085e210c'></a>\n\nO/E - Affected nails (great toenail & other toes)\n- Yellow-brown discoloration\n- Subungual hyperkeratosis\n- Distal onycholysis\n- Nail bed separation\n\n<a id='4172fc11-d72b-444d-97b5-346c6edebe95'></a>\n\nRx\n\n① Tab. Terbin-AF (Terbinafine 250mg)\nDose: 1 tablet once daily.\nSchedule:\n\n| | option : [x] | |\n|---|---|---|\n| Time: 9:00 AM | | |\n\nDuration: 12 weeks.\n\n② Soln. Amorolf-Oliq\n(Amorolfine 5% Nail Lacquer)\nApp: Apply once weekly to\naffected nails.\nNotes: File nails before\napplication.\n\n<a id='8937cf2e-f452-481c-b7ba-9b5e10062b69'></a>\n\nZuk Leh Hmuam - Nun Ittuito I Do Tlang Ang u.\n\n<a id='bc7c47c2-0a28-4255-ab6a-23ab3215415d'></a>\n\n<::attestation: Signature\nsigned\nSignature: legible\nArshad\n10/12/25\nA dark blue handwritten signature, \"Arshad,\" is present with the date \"10/12/25\" underlined below it, centrally located on a light background.\n::>",
+  "chunks": [
+    {
+      "chunk_id": "ab047b84-3828-469b-b231-d5d3ea7045e2",
+      "chunk_type": "text",
+      "text": "<a id='ab047b84-3828-469b-b231-d5d3ea7045e2'></a>\n\nDr. Arshad Khan (Skin Specialist)\nM.D. (Derm & Venereology)\nSkin, Hair & Nail Specialist\nRegd. No. : MSMC/05/2021",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.06228705868124962,
+            "bottom": 0.17403127253055573,
+            "left": 0.03516773879528046,
+            "right": 0.4246754050254822
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "f04d3238-a727-40b5-8dd7-e4c1fe9f50b8",
+      "chunk_type": "text",
+      "text": "<a id='f04d3238-a727-40b5-8dd7-e4c1fe9f50b8'></a>\n\nClinic : - Andrew's Opticals & Pharmacy\nZarkawt, Near Traffic point\nPhone No. 9612314984 (C)\n6009705259",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.08467617630958557,
+            "bottom": 0.18249118328094482,
+            "left": 0.5285632610321045,
+            "right": 0.9339529275894165
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "2ecedc62-a2b9-4098-9d40-188e4138b648",
+      "chunk_type": "text",
+      "text": "<a id='2ecedc62-a2b9-4098-9d40-188e4138b648'></a>\n\nRef. No. ... 27 Mehraj Alom Tapadar 21/M Date : ... 10.12.25",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.18184097111225128,
+            "bottom": 0.24439601600170135,
+            "left": 0.04560542106628418,
+            "right": 0.9631555080413818
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "216fb76e-abd3-4cfd-8e3b-e454085e210c",
+      "chunk_type": "text",
+      "text": "<a id='216fb76e-abd3-4cfd-8e3b-e454085e210c'></a>\n\nO/E - Affected nails (great toenail & other toes)\n- Yellow-brown discoloration\n- Subungual hyperkeratosis\n- Distal onycholysis\n- Nail bed separation",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.28095710277557373,
+            "bottom": 0.4853437542915344,
+            "left": 0.03794732689857483,
+            "right": 0.823392391204834
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "4172fc11-d72b-444d-97b5-346c6edebe95",
+      "chunk_type": "text",
+      "text": "<a id='4172fc11-d72b-444d-97b5-346c6edebe95'></a>\n\nRx\n\n① Tab. Terbin-AF (Terbinafine 250mg)\nDose: 1 tablet once daily.\nSchedule:\n\n| | option : [x] | |\n|---|---|---|\n| Time: 9:00 AM | | |\n\nDuration: 12 weeks.\n\n② Soln. Amorolf-Oliq\n(Amorolfine 5% Nail Lacquer)\nApp: Apply once weekly to\naffected nails.\nNotes: File nails before\napplication.",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.49265629053115845,
+            "bottom": 0.877903401851654,
+            "left": 0.4941632151603699,
+            "right": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "8937cf2e-f452-481c-b7ba-9b5e10062b69",
+      "chunk_type": "text",
+      "text": "<a id='8937cf2e-f452-481c-b7ba-9b5e10062b69'></a>\n\nZuk Leh Hmuam - Nun Ittuito I Do Tlang Ang u.",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.9106350541114807,
+            "bottom": 0.983350932598114,
+            "left": 0.2198334038257599,
+            "right": 0.7852003574371338
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "bc7c47c2-0a28-4255-ab6a-23ab3215415d",
+      "chunk_type": "attestation",
+      "text": "<a id='bc7c47c2-0a28-4255-ab6a-23ab3215415d'></a>\n\n<::attestation: Signature\nsigned\nSignature: legible\nArshad\n10/12/25\nA dark blue handwritten signature, \"Arshad,\" is present with the date \"10/12/25\" underlined below it, centrally located on a light background.\n::>",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.9063271880149841,
+            "bottom": 0.9993428587913513,
+            "left": 0.838373601436615,
+            "right": 0.9987894892692566
+          }
+        }
+      ]
+    }
+  ],
+  "medical_fields": {
+    "patient_name": "Mehraj Alom Tapadar",
+    "date_of_birth": null,
+    "visit_date": "10.12.25",
+    "diagnosis": [
+      "Yellow-brown discoloration",
+      "Subungual hyperkeratosis",
+      "Distal onycholysis",
+      "Nail bed separation"
+    ],
+    "medications": [
+      "Tab. Terbin-AF (Terbinafine 250mg) Dose: 1 tablet once daily.",
+      "Soln. Amorolf-Oliq (Amorolfine 5% Nail Lacquer) App: Apply once weekly to affected nails."
+    ],
+    "lab_values": [],
+    "doctor_name": "Dr. Arshad Khan",
+    "referred_specialist": null,
+    "follow_up_date": null,
+    "summary": "Patient presents with affected nails (great toenail & other toes) showing yellow-brown discoloration, subungual hyperkeratosis, distal onycholysis, and nail bed separation. Treatment includes Tab. Terbin-AF (Terbinafine 250mg) 1 tablet once daily for 12 weeks, and Soln. Amorolf-Oliq (Amorolfine 5% Nail Lacquer) applied once weekly to affected nails after filing."
+  }
+}

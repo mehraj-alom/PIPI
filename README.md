@@ -344,6 +344,7 @@ When appointment booking succeeds, the backend can also:
 - Input source: the existing patient/session case folder in `output/<case_id>/`
 - PDF contents: skin image, detection overlay, Grad-CAM++, extracted document fields, and extracted markdown/text
 - Email attachments: the generated PDF plus original uploaded files
+- SMTP timeout: configure `SMTP_TIMEOUT_SECONDS` in `.env` for larger attachment bundles; the example config uses `150`
 - Failure mode: appointment booking still succeeds even if SMTP delivery fails
 
 ## Case Output Layout
@@ -394,7 +395,7 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-If you want automatic doctor email handoff, add your SMTP values to `.env` using [.env.example](.env.example) as the template.
+If you want automatic doctor email handoff, add your SMTP values to `.env` using [.env.example](.env.example) as the template. For doctor packets with multiple attachments, keep `SMTP_TIMEOUT_SECONDS=150` or higher.
 
 Run database migrations:
 

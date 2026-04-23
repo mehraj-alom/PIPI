@@ -6,10 +6,10 @@ from backend.database.models import Doctor
 
 
 DOCTORS = [
-  {"name":"Dr. Aisha Rahman","specialization":"","phone":"+919800000001","email":"aisha.rahman@optimacare.com","available_days":["monday","wednesday","friday"],"slot_start":"09:00:00","slot_end":"17:00:00","slot_duration":15},
-  {"name":"Dr. Neha Kapoor","specialization":"Dermatology","phone":"+919800000002","email":"neha.kapoor@optimacare.com","available_days":["tuesday","thursday","saturday"],"slot_start":"10:00:00","slot_end":"18:00:00","slot_duration":15},
+  {"name":"Dr. Aisha Rahman","specialization":"","phone":"+919800000001","email":"mehrajalom0@gmail.com","available_days":["monday","wednesday","friday"],"slot_start":"09:00:00","slot_end":"17:00:00","slot_duration":15},
+  {"name":"Dr. Neha Kapoor","specialization":"Dermatology","phone":"+919800000002","email":"mehraj.official000@gmail.com","available_days":["tuesday","thursday","saturday"],"slot_start":"10:00:00","slot_end":"18:00:00","slot_duration":15},
   {"name":"Dr. Arjun Singh","specialization":"Dermatology","phone":"+919800000003","email":"arjun.singh@optimacare.com","available_days":["monday","tuesday","sunday"],"slot_start":"08:00:00","slot_end":"14:00:00","slot_duration":15},
-  {"name":"Dr. Pooja Nair","specialization":"Dermatology","phone":"+919800000004","email":"pooja.nair@optimacare.com","available_days":["wednesday","thursday","saturday"],"slot_start":"11:00:00","slot_end":"19:00:00","slot_duration":15},
+  {"name":"Dr. Pooja Nair","specialization":"Dermatology","phone":"+919800000004","email":"rabbultapadar95@gmail.com","available_days":["wednesday","thursday","saturday"],"slot_start":"11:00:00","slot_end":"19:00:00","slot_duration":15},
   {"name":"Dr. Sameer Khan","specialization":"Dermatology","phone":"+919800000005","email":"mehrajalom0@gmail.com","available_days":["friday","saturday","sunday"],"slot_start":"09:00:00","slot_end":"15:00:00","slot_duration":15},
 
   {"name":"Dr. Vikram Mehta","specialization":"Cardiology","phone":"+919800000006","email":"vikram.mehta@optimacare.com","available_days":["tuesday","thursday","saturday"],"slot_start":"10:00:00","slot_end":"16:00:00","slot_duration":15},

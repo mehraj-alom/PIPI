@@ -57,6 +57,7 @@ The floating call button is not just a voice shortcut. In this repo it can open 
 - [Original SKIN_TELLIGENT project](https://github.com/mehraj-alom/SKIN_TELLIGENT)
 - [Earlier SKIN_DISEASE_CLASSIFIER (`skinV0`)](https://github.com/mehraj-alom/SKIN_DISEASE_CLASSIFIER/tree/skinV0)
 - [Updated training notebook](https://www.kaggle.com/code/mehrajalomtapadar/notebooka1e763f51a)
+- [Demo Video](https://youtu.be/vRlht6qYE-A)
 
 ## Architecture
 

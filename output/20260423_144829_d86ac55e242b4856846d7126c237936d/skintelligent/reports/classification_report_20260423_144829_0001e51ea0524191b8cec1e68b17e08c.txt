@@ -1,0 +1,156 @@
+SKIN_TELLIGENT Classification Report
+========================================
+
+[
+  {
+    "class_name": "Bullous_Disease_Photos",
+    "confidence": 0.9968422651290894,
+    "class_idx": 3,
+    "top_3_predictions": [
+      {
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.9968422651290894,
+        "class_idx": 3
+      },
+      {
+        "class_name": "Rashes",
+        "confidence": 0.0021453206427395344,
+        "class_idx": 21
+      },
+      {
+        "class_name": "Actinic keratosis",
+        "confidence": 0.0005028114537708461,
+        "class_idx": 1
+      }
+    ],
+    "roi_image": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/detections/detection_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_0.jpg",
+    "detection_image": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/detections/detection_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_0.jpg",
+    "roi_index": 0,
+    "det_confidence": 0.7739429473876953,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.9968422651290894,
+        "class_idx": 3,
+        "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_0_top1_class3.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Rashes",
+        "confidence": 0.0021453206427395344,
+        "class_idx": 21,
+        "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_0_top2_class21.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Actinic keratosis",
+        "confidence": 0.0005028114537708461,
+        "class_idx": 1,
+        "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_0_top3_class1.jpg"
+      }
+    ],
+    "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_0_top1_class3.jpg"
+  },
+  {
+    "class_name": "Oily_Skin",
+    "confidence": 0.5899910926818848,
+    "class_idx": 16,
+    "top_3_predictions": [
+      {
+        "class_name": "Oily_Skin",
+        "confidence": 0.5899910926818848,
+        "class_idx": 16
+      },
+      {
+        "class_name": "Rashes",
+        "confidence": 0.16274496912956238,
+        "class_idx": 21
+      },
+      {
+        "class_name": "Acne",
+        "confidence": 0.12910278141498566,
+        "class_idx": 0
+      }
+    ],
+    "roi_image": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/detections/detection_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_1.jpg",
+    "detection_image": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/detections/detection_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_1.jpg",
+    "roi_index": 1,
+    "warning": "Low confidence prediction",
+    "det_confidence": 0.7285088300704956,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Oily_Skin",
+        "confidence": 0.5899910926818848,
+        "class_idx": 16,
+        "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_1_top1_class16.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Rashes",
+        "confidence": 0.16274496912956238,
+        "class_idx": 21,
+        "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_1_top2_class21.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Acne",
+        "confidence": 0.12910278141498566,
+        "class_idx": 0,
+        "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_1_top3_class0.jpg"
+      }
+    ],
+    "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_1_top1_class16.jpg"
+  },
+  {
+    "class_name": "Rashes",
+    "confidence": 0.6298494935035706,
+    "class_idx": 21,
+    "top_3_predictions": [
+      {
+        "class_name": "Rashes",
+        "confidence": 0.6298494935035706,
+        "class_idx": 21
+      },
+      {
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.27482491731643677,
+        "class_idx": 3
+      },
+      {
+        "class_name": "Actinic keratosis",
+        "confidence": 0.041502803564071655,
+        "class_idx": 1
+      }
+    ],
+    "roi_image": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/detections/detection_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_2.jpg",
+    "detection_image": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/detections/detection_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_2.jpg",
+    "roi_index": 2,
+    "det_confidence": 0.5588887333869934,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Rashes",
+        "confidence": 0.6298494935035706,
+        "class_idx": 21,
+        "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_2_top1_class21.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.27482491731643677,
+        "class_idx": 3,
+        "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_2_top2_class3.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Actinic keratosis",
+        "confidence": 0.041502803564071655,
+        "class_idx": 1,
+        "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_2_top3_class1.jpg"
+      }
+    ],
+    "gradcam": "output/20260423_144829_d86ac55e242b4856846d7126c237936d/skintelligent/gradcam/gradcam_roi_20260423_144829_0001e51ea0524191b8cec1e68b17e08c_2_top1_class21.jpg"
+  }
+]

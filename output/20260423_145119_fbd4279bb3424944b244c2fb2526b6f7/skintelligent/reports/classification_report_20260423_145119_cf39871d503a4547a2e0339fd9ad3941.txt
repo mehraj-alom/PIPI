@@ -1,0 +1,55 @@
+SKIN_TELLIGENT Classification Report
+========================================
+
+[
+  {
+    "class_name": "Bullous_Disease_Photos",
+    "confidence": 0.9841663837432861,
+    "class_idx": 3,
+    "top_3_predictions": [
+      {
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.9841663837432861,
+        "class_idx": 3
+      },
+      {
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.005473935045301914,
+        "class_idx": 9
+      },
+      {
+        "class_name": "Actinic keratosis",
+        "confidence": 0.004977514501661062,
+        "class_idx": 1
+      }
+    ],
+    "roi_image": "output/20260423_145119_fbd4279bb3424944b244c2fb2526b6f7/skintelligent/detections/detection_20260423_145119_cf39871d503a4547a2e0339fd9ad3941_0.jpg",
+    "detection_image": "output/20260423_145119_fbd4279bb3424944b244c2fb2526b6f7/skintelligent/detections/detection_20260423_145119_cf39871d503a4547a2e0339fd9ad3941_0.jpg",
+    "roi_index": 0,
+    "det_confidence": 0.5840184092521667,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Bullous_Disease_Photos",
+        "confidence": 0.9841663837432861,
+        "class_idx": 3,
+        "gradcam": "output/20260423_145119_fbd4279bb3424944b244c2fb2526b6f7/skintelligent/gradcam/gradcam_roi_20260423_145119_cf39871d503a4547a2e0339fd9ad3941_0_top1_class3.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.005473935045301914,
+        "class_idx": 9,
+        "gradcam": "output/20260423_145119_fbd4279bb3424944b244c2fb2526b6f7/skintelligent/gradcam/gradcam_roi_20260423_145119_cf39871d503a4547a2e0339fd9ad3941_0_top2_class9.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Actinic keratosis",
+        "confidence": 0.004977514501661062,
+        "class_idx": 1,
+        "gradcam": "output/20260423_145119_fbd4279bb3424944b244c2fb2526b6f7/skintelligent/gradcam/gradcam_roi_20260423_145119_cf39871d503a4547a2e0339fd9ad3941_0_top3_class1.jpg"
+      }
+    ],
+    "gradcam": "output/20260423_145119_fbd4279bb3424944b244c2fb2526b6f7/skintelligent/gradcam/gradcam_roi_20260423_145119_cf39871d503a4547a2e0339fd9ad3941_0_top1_class3.jpg"
+  }
+]

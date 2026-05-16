@@ -1,0 +1,51 @@
+SKIN_TELLIGENT Classification Report
+========================================
+
+[
+  {
+    "class_name": "Atopic_Dermatitis",
+    "confidence": 0.8576254844665527,
+    "class_idx": 2,
+    "top_3_predictions": [
+      {
+        "class_name": "Atopic_Dermatitis",
+        "confidence": 0.8576254844665527,
+        "class_idx": 2
+      },
+      {
+        "class_name": "Eczema",
+        "confidence": 0.08642426878213882,
+        "class_idx": 8
+      },
+      {
+        "class_name": "Psoriasis_Pictures_Lichen_Planus_And_Related_Diseases",
+        "confidence": 0.029063813388347626,
+        "class_idx": 20
+      }
+    ],
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Atopic_Dermatitis",
+        "confidence": 0.8576254844665527,
+        "class_idx": 2,
+        "gradcam": "output/20260423_145008_9e7a8adafb184e4da09c8733901709c8/skintelligent/gradcam/gradcam_full_image_top1_class2.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Eczema",
+        "confidence": 0.08642426878213882,
+        "class_idx": 8,
+        "gradcam": "output/20260423_145008_9e7a8adafb184e4da09c8733901709c8/skintelligent/gradcam/gradcam_full_image_top2_class8.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Psoriasis_Pictures_Lichen_Planus_And_Related_Diseases",
+        "confidence": 0.029063813388347626,
+        "class_idx": 20,
+        "gradcam": "output/20260423_145008_9e7a8adafb184e4da09c8733901709c8/skintelligent/gradcam/gradcam_full_image_top3_class20.jpg"
+      }
+    ],
+    "gradcam": "output/20260423_145008_9e7a8adafb184e4da09c8733901709c8/skintelligent/gradcam/gradcam_full_image_top1_class2.jpg"
+  }
+]

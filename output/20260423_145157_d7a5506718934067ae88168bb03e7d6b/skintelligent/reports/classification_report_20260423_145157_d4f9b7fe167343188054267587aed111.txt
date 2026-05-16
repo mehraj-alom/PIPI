@@ -1,0 +1,51 @@
+SKIN_TELLIGENT Classification Report
+========================================
+
+[
+  {
+    "class_name": "Dermatitis",
+    "confidence": 0.6209849119186401,
+    "class_idx": 5,
+    "top_3_predictions": [
+      {
+        "class_name": "Dermatitis",
+        "confidence": 0.6209849119186401,
+        "class_idx": 5
+      },
+      {
+        "class_name": "Actinic keratosis",
+        "confidence": 0.16775541007518768,
+        "class_idx": 1
+      },
+      {
+        "class_name": "Eczema",
+        "confidence": 0.12594981491565704,
+        "class_idx": 8
+      }
+    ],
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Dermatitis",
+        "confidence": 0.6209849119186401,
+        "class_idx": 5,
+        "gradcam": "output/20260423_145157_d7a5506718934067ae88168bb03e7d6b/skintelligent/gradcam/gradcam_full_image_top1_class5.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Actinic keratosis",
+        "confidence": 0.16775541007518768,
+        "class_idx": 1,
+        "gradcam": "output/20260423_145157_d7a5506718934067ae88168bb03e7d6b/skintelligent/gradcam/gradcam_full_image_top2_class1.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Eczema",
+        "confidence": 0.12594981491565704,
+        "class_idx": 8,
+        "gradcam": "output/20260423_145157_d7a5506718934067ae88168bb03e7d6b/skintelligent/gradcam/gradcam_full_image_top3_class8.jpg"
+      }
+    ],
+    "gradcam": "output/20260423_145157_d7a5506718934067ae88168bb03e7d6b/skintelligent/gradcam/gradcam_full_image_top1_class5.jpg"
+  }
+]

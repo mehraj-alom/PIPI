@@ -1,0 +1,55 @@
+SKIN_TELLIGENT Classification Report
+========================================
+
+[
+  {
+    "class_name": "Nail Fungus And Other Nail Disease",
+    "confidence": 0.9187434315681458,
+    "class_idx": 15,
+    "top_3_predictions": [
+      {
+        "class_name": "Nail Fungus And Other Nail Disease",
+        "confidence": 0.9187434315681458,
+        "class_idx": 15
+      },
+      {
+        "class_name": "Vitiligo",
+        "confidence": 0.033488597720861435,
+        "class_idx": 25
+      },
+      {
+        "class_name": "Psoriasis_Pictures_Lichen_Planus_And_Related_Diseases",
+        "confidence": 0.02489144168794155,
+        "class_idx": 20
+      }
+    ],
+    "roi_image": "output/20260423_144028_bdcf0c53fd4b4f5e82b6dc83b845ea43/skintelligent/detections/detection_20260423_144028_f9b63e9a3767495fb33b5b793a287e05_0.jpg",
+    "detection_image": "output/20260423_144028_bdcf0c53fd4b4f5e82b6dc83b845ea43/skintelligent/detections/detection_20260423_144028_f9b63e9a3767495fb33b5b793a287e05_0.jpg",
+    "roi_index": 0,
+    "det_confidence": 0.7597686052322388,
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Nail Fungus And Other Nail Disease",
+        "confidence": 0.9187434315681458,
+        "class_idx": 15,
+        "gradcam": "output/20260423_144028_bdcf0c53fd4b4f5e82b6dc83b845ea43/skintelligent/gradcam/gradcam_roi_20260423_144028_f9b63e9a3767495fb33b5b793a287e05_0_top1_class15.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Vitiligo",
+        "confidence": 0.033488597720861435,
+        "class_idx": 25,
+        "gradcam": "output/20260423_144028_bdcf0c53fd4b4f5e82b6dc83b845ea43/skintelligent/gradcam/gradcam_roi_20260423_144028_f9b63e9a3767495fb33b5b793a287e05_0_top2_class25.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Psoriasis_Pictures_Lichen_Planus_And_Related_Diseases",
+        "confidence": 0.02489144168794155,
+        "class_idx": 20,
+        "gradcam": "output/20260423_144028_bdcf0c53fd4b4f5e82b6dc83b845ea43/skintelligent/gradcam/gradcam_roi_20260423_144028_f9b63e9a3767495fb33b5b793a287e05_0_top3_class20.jpg"
+      }
+    ],
+    "gradcam": "output/20260423_144028_bdcf0c53fd4b4f5e82b6dc83b845ea43/skintelligent/gradcam/gradcam_roi_20260423_144028_f9b63e9a3767495fb33b5b793a287e05_0_top1_class15.jpg"
+  }
+]

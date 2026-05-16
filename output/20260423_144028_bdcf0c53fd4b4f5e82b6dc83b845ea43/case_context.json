@@ -1,0 +1,10 @@
+{
+  "case_id": "20260423_144028_bdcf0c53fd4b4f5e82b6dc83b845ea43",
+  "context_key": "default_session",
+  "patient_id": null,
+  "session_id": null,
+  "case_dir": "output/20260423_144028_bdcf0c53fd4b4f5e82b6dc83b845ea43",
+  "skintelligent_dir": "output/20260423_144028_bdcf0c53fd4b4f5e82b6dc83b845ea43/skintelligent",
+  "documents_dir": "output/20260423_144028_bdcf0c53fd4b4f5e82b6dc83b845ea43/documents",
+  "updated_at": "2026-04-23T09:10:28.121940"
+}

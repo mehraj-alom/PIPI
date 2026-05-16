@@ -1,0 +1,51 @@
+SKIN_TELLIGENT Classification Report
+========================================
+
+[
+  {
+    "class_name": "Rashes",
+    "confidence": 0.7907609343528748,
+    "class_idx": 21,
+    "top_3_predictions": [
+      {
+        "class_name": "Rashes",
+        "confidence": 0.7907609343528748,
+        "class_idx": 21
+      },
+      {
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.13760583102703094,
+        "class_idx": 9
+      },
+      {
+        "class_name": "Actinic keratosis",
+        "confidence": 0.05329533666372299,
+        "class_idx": 1
+      }
+    ],
+    "top_3_gradcams": [
+      {
+        "rank": 1,
+        "class_name": "Rashes",
+        "confidence": 0.7907609343528748,
+        "class_idx": 21,
+        "gradcam": "output/20260423_145339_69bdd41e71364e3bb0de36e0c9ef2a68/skintelligent/gradcam/gradcam_full_image_top1_class21.jpg"
+      },
+      {
+        "rank": 2,
+        "class_name": "Exanthems_And_Drug_Eruptions",
+        "confidence": 0.13760583102703094,
+        "class_idx": 9,
+        "gradcam": "output/20260423_145339_69bdd41e71364e3bb0de36e0c9ef2a68/skintelligent/gradcam/gradcam_full_image_top2_class9.jpg"
+      },
+      {
+        "rank": 3,
+        "class_name": "Actinic keratosis",
+        "confidence": 0.05329533666372299,
+        "class_idx": 1,
+        "gradcam": "output/20260423_145339_69bdd41e71364e3bb0de36e0c9ef2a68/skintelligent/gradcam/gradcam_full_image_top3_class1.jpg"
+      }
+    ],
+    "gradcam": "output/20260423_145339_69bdd41e71364e3bb0de36e0c9ef2a68/skintelligent/gradcam/gradcam_full_image_top1_class21.jpg"
+  }
+]

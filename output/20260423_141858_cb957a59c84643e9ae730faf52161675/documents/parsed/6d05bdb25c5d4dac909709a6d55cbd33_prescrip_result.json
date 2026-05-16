@@ -1,0 +1,263 @@
+{
+  "markdown": "<a id='c4e0f715-a9d3-4b3f-9b46-45f6b4459874'></a>\n\nDr. Lalhuthangi Hmar (Mami)\nM.S. Ophthalmology\nEye Specialist\nRegd. No. : MSMC/22/2015\n\n<a id='b778bf7e-df0d-42cf-ac61-498c9ce9d472'></a>\n\nClinic : - Andrew's Opticals & Pharmacy\nZarkawt, Near Traffic point\nPhone No. 9612314984 (C)\n6009705259\n\n<a id='90199a55-a850-469e-8126-a04dec7ccc86'></a>\n\nRef. No. ... 3\nMA Japadar 56/M\nZarkawt\n\n<a id='432594d6-254b-4828-90a7-ea58c3e4ebdc'></a>\n\nDate : 10.12.25\n\nB|E\n\nPlano Add+2-00\n\n<a id='7fdac65b-6d14-4216-a76c-9b1e0a35609e'></a>\n\nTo- F.B. Sensation BLE-C\nPoor.\n\n<a id='6f80c8db-ff7c-4dc3-b7a6-2ac65e1bab00'></a>\n\nV_A < 6/18\n       6/18\n\nCPH < 6/9\n       6/9\n\n<a id='a2245e7a-149a-4dd2-8bd7-049719de4cc7'></a>\n\n9E - Ant seg - hum.\nFundus - we.\n\n<a id='88f63b92-3309-473c-9daf-b0b2435f15a8'></a>\n\n<::attestation: Signature\n[Readable Text: +1.25]\n[Signature: illegible]\nHandwritten in blue ink, centered, with a vertical line to the right::>\n\n<a id='89ceda16-521d-4c96-9cda-7dfddd582f00'></a>\n\nDi- Ref. Ense à Presbyopia\n\nR (1) Lubrisa Ultra eye drops.\n\nfor 1 vition N.3 xulla 3.\n\n1 --- 1 --- 1\n7:00 am --- 3 pm --- 9 pm\n(2) cap. Memiif -G\n\n<a id='d0760b3a-2a71-4e1d-8edb-1399ea040550'></a>\n\nRegn <\n+1.00 dsph\n\n2.25 dsa.\n\n<a id='e9d6627f-e444-4cc6-9df7-9dee5cc34b59'></a>\n\nAdd:- + 2.25 N4\n\n<a id='dd038662-bae6-4818-91e9-81a33636c42c'></a>\n\n7:00 AM 3 PM 9 PM\n\n2) Cap. Mennil -G\n\nMun / inlin V.Ixtila 3.\n\n-0-\n\n<a id='ad3e25ee-d259-47b5-a0e2-04893cdba01f'></a>\n\nZuk Leh Hmuam – Nun Titawilu I Do Ilang Ang u.\n\n<a id='04c683dc-f17c-4315-82db-9a03cbb7fd9f'></a>\n\n<::attestation: Signature\nStatus indicators - signed\nSignature: illegible\nReadable Text: 18/12/23\nA blue ink handwritten signature with a date below it, centered on a light background.::>",
+  "chunks": [
+    {
+      "chunk_id": "c4e0f715-a9d3-4b3f-9b46-45f6b4459874",
+      "chunk_type": "text",
+      "text": "<a id='c4e0f715-a9d3-4b3f-9b46-45f6b4459874'></a>\n\nDr. Lalhuthangi Hmar (Mami)\nM.S. Ophthalmology\nEye Specialist\nRegd. No. : MSMC/22/2015",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.06075514853000641,
+            "bottom": 0.17459093034267426,
+            "left": 0.03352545201778412,
+            "right": 0.37543946504592896
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "b778bf7e-df0d-42cf-ac61-498c9ce9d472",
+      "chunk_type": "text",
+      "text": "<a id='b778bf7e-df0d-42cf-ac61-498c9ce9d472'></a>\n\nClinic : - Andrew's Opticals & Pharmacy\nZarkawt, Near Traffic point\nPhone No. 9612314984 (C)\n6009705259",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.08347846567630768,
+            "bottom": 0.18300320208072662,
+            "left": 0.5269553661346436,
+            "right": 0.9346276521682739
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "90199a55-a850-469e-8126-a04dec7ccc86",
+      "chunk_type": "text",
+      "text": "<a id='90199a55-a850-469e-8126-a04dec7ccc86'></a>\n\nRef. No. ... 3\nMA Japadar 56/M\nZarkawt",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.18087075650691986,
+            "bottom": 0.26802757382392883,
+            "left": 0.04617178440093994,
+            "right": 0.5726494789123535
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "432594d6-254b-4828-90a7-ea58c3e4ebdc",
+      "chunk_type": "text",
+      "text": "<a id='432594d6-254b-4828-90a7-ea58c3e4ebdc'></a>\n\nDate : 10.12.25\n\nB|E\n\nPlano Add+2-00",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.20991864800453186,
+            "bottom": 0.3137744963169098,
+            "left": 0.6762638092041016,
+            "right": 0.9932408332824707
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "7fdac65b-6d14-4216-a76c-9b1e0a35609e",
+      "chunk_type": "text",
+      "text": "<a id='7fdac65b-6d14-4216-a76c-9b1e0a35609e'></a>\n\nTo- F.B. Sensation BLE-C\nPoor.",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.3499361574649811,
+            "bottom": 0.4427678883075714,
+            "left": 0.03300294280052185,
+            "right": 0.5154882669448853
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "6f80c8db-ff7c-4dc3-b7a6-2ac65e1bab00",
+      "chunk_type": "text",
+      "text": "<a id='6f80c8db-ff7c-4dc3-b7a6-2ac65e1bab00'></a>\n\nV_A < 6/18\n       6/18\n\nCPH < 6/9\n       6/9",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.36561381816864014,
+            "bottom": 0.4719557762145996,
+            "left": 0.7360642552375793,
+            "right": 0.9967842698097229
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "a2245e7a-149a-4dd2-8bd7-049719de4cc7",
+      "chunk_type": "text",
+      "text": "<a id='a2245e7a-149a-4dd2-8bd7-049719de4cc7'></a>\n\n9E - Ant seg - hum.\nFundus - we.",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.4885038137435913,
+            "bottom": 0.605039119720459,
+            "left": 0.024390339851379395,
+            "right": 0.3770265281200409
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "88f63b92-3309-473c-9daf-b0b2435f15a8",
+      "chunk_type": "attestation",
+      "text": "<a id='88f63b92-3309-473c-9daf-b0b2435f15a8'></a>\n\n<::attestation: Signature\n[Readable Text: +1.25]\n[Signature: illegible]\nHandwritten in blue ink, centered, with a vertical line to the right::>",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.6119575500488281,
+            "bottom": 0.6674281358718872,
+            "left": 0.10261554270982742,
+            "right": 0.2883860766887665
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "89ceda16-521d-4c96-9cda-7dfddd582f00",
+      "chunk_type": "text",
+      "text": "<a id='89ceda16-521d-4c96-9cda-7dfddd582f00'></a>\n\nDi- Ref. Ense à Presbyopia\n\nR (1) Lubrisa Ultra eye drops.\n\nfor 1 vition N.3 xulla 3.\n\n1 --- 1 --- 1\n7:00 am --- 3 pm --- 9 pm\n(2) cap. Memiif -G",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.5130272507667542,
+            "bottom": 0.7875519394874573,
+            "left": 0.4502372741699219,
+            "right": 0.9986048936843872
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "d0760b3a-2a71-4e1d-8edb-1399ea040550",
+      "chunk_type": "text",
+      "text": "<a id='d0760b3a-2a71-4e1d-8edb-1399ea040550'></a>\n\nRegn <\n+1.00 dsph\n\n2.25 dsa.",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.6760572791099548,
+            "bottom": 0.7979124188423157,
+            "left": 0.020675525069236755,
+            "right": 0.42643553018569946
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "e9d6627f-e444-4cc6-9df7-9dee5cc34b59",
+      "chunk_type": "text",
+      "text": "<a id='e9d6627f-e444-4cc6-9df7-9dee5cc34b59'></a>\n\nAdd:- + 2.25 N4",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.7717818021774292,
+            "bottom": 0.8433853387832642,
+            "left": 0.06864891946315765,
+            "right": 0.4165838956832886
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "dd038662-bae6-4818-91e9-81a33636c42c",
+      "chunk_type": "text",
+      "text": "<a id='dd038662-bae6-4818-91e9-81a33636c42c'></a>\n\n7:00 AM 3 PM 9 PM\n\n2) Cap. Mennil -G\n\nMun / inlin V.Ixtila 3.\n\n-0-",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.7162305116653442,
+            "bottom": 0.8692904710769653,
+            "left": 0.47787171602249146,
+            "right": 0.9969210028648376
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "ad3e25ee-d259-47b5-a0e2-04893cdba01f",
+      "chunk_type": "text",
+      "text": "<a id='ad3e25ee-d259-47b5-a0e2-04893cdba01f'></a>\n\nZuk Leh Hmuam – Nun Titawilu I Do Ilang Ang u.",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.9070389866828918,
+            "bottom": 0.9830141663551331,
+            "left": 0.2201124131679535,
+            "right": 0.7840420007705688
+          }
+        }
+      ]
+    },
+    {
+      "chunk_id": "04c683dc-f17c-4315-82db-9a03cbb7fd9f",
+      "chunk_type": "attestation",
+      "text": "<a id='04c683dc-f17c-4315-82db-9a03cbb7fd9f'></a>\n\n<::attestation: Signature\nStatus indicators - signed\nSignature: illegible\nReadable Text: 18/12/23\nA blue ink handwritten signature with a date below it, centered on a light background.::>",
+      "grounding": [
+        {
+          "page": 0,
+          "coordinates": {
+            "top": 0.9066586494445801,
+            "bottom": 0.999947190284729,
+            "left": 0.8572841286659241,
+            "right": 0.9996697306632996
+          }
+        }
+      ]
+    }
+  ],
+  "medical_fields": {
+    "patient_name": "MA Japadar",
+    "date_of_birth": null,
+    "visit_date": "10.12.25",
+    "diagnosis": [
+      "Presbyopia"
+    ],
+    "medications": [
+      "Lubrisa Ultra eye drops: 1 --- 1 --- 1 7:00 am --- 3 pm --- 9 pm",
+      "Cap. Memiif -G: Mun / inlin V.Ixtila 3. 7:00 AM 3 PM 9 PM"
+    ],
+    "lab_values": [
+      {
+        "test": "V_A",
+        "value": "< 6/18 6/18"
+      },
+      {
+        "test": "CPH",
+        "value": "< 6/9 6/9"
+      },
+      {
+        "test": "Regn",
+        "value": "< +1.00 dsph 2.25 dsa."
+      },
+      {
+        "test": "Add",
+        "value": "+ 2.25 N4"
+      }
+    ],
+    "doctor_name": "Dr. Lalhuthangi Hmar (Mami)",
+    "referred_specialist": "",
+    "follow_up_date": null,
+    "summary": "This medical record details an eye examination for patient MA Japadar, a 56-year-old male, conducted by Dr. Lalhuthangi Hmar, an Eye Specialist, on 10.12.25. Key findings include visual acuity (V_A) less than 6/18 and CPH less than 6/9. The anterior segment was noted as 'hum' and the fundus as 'we'. The diagnosis or referral indicates Presbyopia. The patient was prescribed Lubrisa Ultra eye drops to be taken three times a day (7 AM, 3 PM, 9 PM) and Cap. Memiif -G. The prescription also includes an add of +2.25 N4 and a registration of +1.00 dsph and 2.25 dsa."
+  }
+}

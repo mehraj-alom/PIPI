@@ -10,7 +10,6 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.services.SKIN_TELLIGENT.inference import InferencePipeline
 from backend.services.output_context import CaseOutputManager
-from logger import SKIN_TELLIGENT_logger as logger
 from api.routers import skintelligent_router , document_router , voice_agent_router
 
 app = FastAPI(
